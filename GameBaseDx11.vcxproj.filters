@@ -136,6 +136,7 @@
     <ClCompile Include="External\Backends\imgui_impl_win32.cpp">
       <Filter>External\Backends</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -242,6 +243,7 @@
     <ClInclude Include="External\Backends\imgui_impl_win32.h">
       <Filter>External\Backends</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
