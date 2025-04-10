@@ -1,6 +1,7 @@
 #include "sceneManager.h"
 
 #include "../PlayScene.h"
+//#include "../TitleScene.h"
 #include "Model.h"
 #include "Image.h"
 #include "Audio.h"
@@ -38,6 +39,7 @@ void SceneManager::Update()
 		//Ÿ‚ÌƒV[ƒ“‚ğì¬
 		switch (nextSceneID_)
 		{
+		//case SCENE_ID_TITLE: Instantiate<TitleScene>(this); break;
 		case SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
 
 		}
