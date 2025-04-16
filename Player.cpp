@@ -23,6 +23,7 @@ void Player::Initialize()
 	Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0);
 	assert(hPlayerFloatingModel_ >= 0);
 
+
 }
 
 void Player::Update()
@@ -90,6 +91,21 @@ void Player::Update()
 		XMVECTOR posVec = XMLoadFloat3(&transform_.position_);
 		posVec = XMVectorAdd(posVec, worldMoveVec);
 		XMStoreFloat3(&transform_.position_, posVec);
+	}
+
+	// 泳ぐ　平泳ぎ的なの
+	if (fabs(Input::GetPadStickL(0).x) > 0.05f || fabs(Input::GetPadStickL(0).y) > 0.05f) {
+		playerState_ = PLAYER_ID_SWIM;
+	}
+	// 浮く　
+	if (Input::IsKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+		playerState_ = PLAYER_ID_FLOAT;
+		transform_.position_.y += 0.1f;
+	}
+	// 沈む　
+	if (Input::IsKey(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
+		playerState_ = PLAYER_ID_FLOAT;
+		transform_.position_.y -= 0.1f;
 	}
 
 	// 右スティックの入力を取得（padID = 0:1P想定）
