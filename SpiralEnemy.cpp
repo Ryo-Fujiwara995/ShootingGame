@@ -50,14 +50,14 @@ void SpiralEnemy::Update()
     float dz = transform_.position_.z - playerPos.z;
     float distSq = (dx * dx) + (dz * dz);
 
-    if (distSq <= PROXIMITY_RADIUS * PROXIMITY_RADIUS) {
+    if (distSq <= proximityRadius * proximityRadius) {
         if (!enteredProximity_) {
             enteredProximity_ = true;
             timeSinceEntered_ = 0.0f;
         }
         else {
             timeSinceEntered_ += deltaTime;
-            if (timeSinceEntered_ >= DISAPPEAR_AFTER) {
+            if (timeSinceEntered_ >= disappearAfter) {
                 KillMe();
             }
         }

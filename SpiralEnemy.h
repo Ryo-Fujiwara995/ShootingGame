@@ -19,8 +19,8 @@ private:
 	bool enteredProximity_ = false; // プレイヤー範囲に入ったか
 	float timeSinceEntered_ = 0.0f; // 経過時間
 
-	const float PROXIMITY_RADIUS = 5.0f;
-	const float DISAPPEAR_AFTER = 2.0f; // ← 例：入ってから2秒後に消える
+	const float proximityRadius = 5.0f;
+	const float disappearAfter = 2.0f; // ← 例：入ってから2秒後に消える
 public:
 	Player* player_ = nullptr;
 	SpiralEnemy(GameObject* parent);
