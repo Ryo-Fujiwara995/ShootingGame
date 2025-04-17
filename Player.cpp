@@ -107,7 +107,6 @@ void Player::Update()
 		playerState_ = PLAYER_ID_FLOAT;
 		transform_.position_.y -= 0.1f;
 	}
-
 	// 右スティックの入力を取得（padID = 0:1P想定）
 	XMFLOAT3 stickR = Input::GetPadStickR(0);
 

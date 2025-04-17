@@ -28,5 +28,7 @@ public:
 	void Draw() override;
 	void Release() override;
 	
+	// Playerのポジションを外でとってくるために使用
+	DirectX::XMFLOAT3& GetPosition() { return transform_.position_; }
+	
 };
-

@@ -1,10 +1,3 @@
-
-//
-//　最終更新日：2023/10/20
-//
-
-
-
 #include <Windows.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -18,6 +11,7 @@
 #include "Input.h"
 #include "Audio.h"
 #include "VFX.h"
+#include "Time.h"
 
 #pragma comment(lib,"Winmm.lib")
 
@@ -62,8 +56,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Input::Initialize(hWnd);
 
 	//オーディオ（効果音）の準備
-	Audio::Initialize();
+	Audio::Initialize();	
 
+	// Time
+	Time::Initialize();
 
 	//ルートオブジェクト準備
 	//すべてのゲームオブジェクトの親となるオブジェクト
@@ -116,7 +112,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				lastUpdateTime = nowTime;	//現在の時間（最後に画面を更新した時間）を覚えておく
 				FPS++;						//画面更新回数をカウントする
 
-
+				Time::Update();
 
 
 				//入力（キーボード、マウス、コントローラー）情報を更新
