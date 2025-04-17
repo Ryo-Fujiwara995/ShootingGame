@@ -12,7 +12,6 @@
 #include "Audio.h"
 #include "VFX.h"
 #include "Time.h"
-
 #pragma comment(lib,"Winmm.lib")
 
 //定数宣言
@@ -57,10 +56,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//オーディオ（効果音）の準備
 	Audio::Initialize();	
-
 	// Time
 	Time::Initialize();
-
 	//ルートオブジェクト準備
 	//すべてのゲームオブジェクトの親となるオブジェクト
 	RootObject* pRootObject = new RootObject;
@@ -161,6 +158,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Image::AllRelease();
 	pRootObject->ReleaseSub();
 	SAFE_DELETE(pRootObject);
+	Time::AllRelease();
 	Direct3D::Release();
 
 	return 0;

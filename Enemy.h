@@ -4,7 +4,7 @@ class Enemy :
     public GameObject
 {
 private:
-	int hEnemyDefaultModel_;
+	
 public:
 	Enemy(GameObject* parent);
 	void Initialize() override;

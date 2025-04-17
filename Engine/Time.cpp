@@ -21,4 +21,10 @@ namespace Time {
     float GetDeltaTime() {
         return deltaTime;
     }
+    void AllRelease() {
+        // ¡‚Ì‚Æ‚±‚ë‰ğ•ú‘ÎÛ‚Í‚È‚µi”O‚Ì‚½‚ßj
+        deltaTime = 0.0f;
+        frequency.QuadPart = 0;
+        prevCounter.QuadPart = 0;
+    }
 }

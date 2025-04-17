@@ -4,4 +4,5 @@ namespace Time {
     void Initialize();
     void Update();
     float GetDeltaTime();
+    void AllRelease();
 }
