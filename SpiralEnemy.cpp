@@ -8,8 +8,8 @@ SpiralEnemy::SpiralEnemy(GameObject* parent) :Enemy(parent), hSpiralEnemyDefault
 
 void SpiralEnemy::Initialize()
 {
-	hSpiralEnemyDefaultModel_ = Model::Load("Models\\Enemy\\EnemyDefault.fbx");
-	assert(hSpiralEnemyDefaultModel_ >= 0);
+    hSpiralEnemyDefaultModel_ = Model::Load("Models\\Enemy\\EnemyDefault.fbx");
+    assert(hSpiralEnemyDefaultModel_ >= 0);
 
     if (!player_) return;
 
@@ -19,8 +19,8 @@ void SpiralEnemy::Initialize()
     // ランダムな初期角度（0 2π）
     angle_ = static_cast<float>(rand()) / RAND_MAX * XM_2PI;
 
-    // ランダムな初期距離（例：20～40）
-    radius_ = 20.0f + static_cast<float>(rand()) / RAND_MAX * 20.0f;
+    // ランダムな初期距離
+    radius_ = SPIRAL_ENEMY_MINIMUM_VALUE + static_cast<float>(rand()) / RAND_MAX * SPIRAL_ENEMY_MAXIMUM_VALUE;
 
     // 初期位置を計算
     transform_.position_.x = playerPos.x + cosf(angle_) * radius_;
@@ -35,10 +35,11 @@ void SpiralEnemy::Update()
     float deltaTime = Time::GetDeltaTime();
     const XMFLOAT3& playerPos = player_->GetPosition();
 
+
     // 螺旋移動
     angle_ += angularSpeed_ * deltaTime;
     radius_ -= radialSpeed_ * deltaTime;
-    if (radius_ < 0.5f) radius_ = 0.5f;
+    if (radius_ < SPIRAL_ENEMY_MIN_RADIUS) radius_ = SPIRAL_ENEMY_MIN_RADIUS;
 
     transform_.position_.x = playerPos.x + cosf(angle_) * radius_;
     transform_.position_.z = playerPos.z + sinf(angle_) * radius_;

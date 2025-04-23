@@ -2,7 +2,7 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
-
+#include "GameSetting.h"
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
 			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),
 			playerState_(), isRotateRight_(false), originalRotateRight_(0.0f), isRotateLeft_(false),originalRotateLeft_(0.0f)
@@ -34,32 +34,32 @@ void Player::Update()
 	// キーボード移動 WASDをGAMEPADでいう、左スティック。移動キーをGAMEPADでいう右スティックに見立てる
 	if (Input::IsKey(DIK_W)) {
 		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y += 0.1f;
+		transform_.position_.y += PLAYER_SPEED;
 		Model::GetAnimFrame(hPlayerFloatingModel_);
 	}
 	if (Input::IsKey(DIK_S)) {
 		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y -= 0.1f;
+		transform_.position_.y -= PLAYER_SPEED;
 		Model::GetAnimFrame(hPlayerFloatingModel_);
 	}
 	if (Input::IsKey(DIK_A)) { // 左
 		playerState_ = PLAYER_ID_SWIM;
-		transform_.position_.x -= 0.1f;
+		transform_.position_.x -= PLAYER_SPEED;
 		Model::GetAnimFrame(hPlayerSwimmingModel_);
 	}
 
 	if (Input::IsKey(DIK_D)) { // 右
 		playerState_ = PLAYER_ID_SWIM;
-		transform_.position_.x += 0.1f;
+		transform_.position_.x += PLAYER_SPEED;
 		Model::GetAnimFrame(hPlayerSwimmingModel_);
 	}
 
 	// 左右回転
 	if (Input::IsKey(DIK_LEFT)) {
-		transform_.rotate_.y += 0.05f; // 右回転
+		transform_.rotate_.y += PLAYER_ROTATE_SPEED; // 右回転
 	}
 	if (Input::IsKey(DIK_RIGHT)) {
-		transform_.rotate_.y -= 0.05f; // 左回転
+		transform_.rotate_.y -= PLAYER_ROTATE_SPEED; // 左回転
 	}
 	// ------------------------------
 	// GAMEPADでの入力関連 左スティックで移動　右スティックで回転
@@ -100,12 +100,12 @@ void Player::Update()
 	// 浮く　
 	if (Input::IsKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y += 0.1f;
+		transform_.position_.y += PLAYER_SPEED;
 	}
 	// 沈む　
 	if (Input::IsKey(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
 		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y -= 0.1f;
+		transform_.position_.y -= PLAYER_SPEED;
 	}
 	// 右スティックの入力を取得（padID = 0:1P想定）
 	XMFLOAT3 stickR = Input::GetPadStickR(0);
@@ -120,7 +120,7 @@ void Player::Update()
 	// カメラ追従（プレイヤー回転に応じて視点を調整）
 	// ------------------------------
 	//XMFLOAT3 offset = XMFLOAT3(0.0f, 3.0f, -8.0f);  // 後方＋上
-	XMFLOAT3 offset = XMFLOAT3(0.0f, 20.0f, -20.0f);  // 後方＋上
+	XMFLOAT3 offset = XMFLOAT3(0.0f, 10.0f, -10.0f);  // 後方＋上
 
 	float yaw = transform_.rotate_.y;
 	XMMATRIX rotMatrix = XMMatrixRotationY(yaw);

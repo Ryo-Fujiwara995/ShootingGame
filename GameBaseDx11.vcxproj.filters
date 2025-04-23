@@ -121,24 +121,6 @@
     <ClCompile Include="SpaceShuttle.cpp">
       <Filter>Play</Filter>
     </ClCompile>
-    <ClCompile Include="External\Imgui\imgui.cpp">
-      <Filter>External\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\Imgui\imgui_draw.cpp">
-      <Filter>External\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\Imgui\imgui_tables.cpp">
-      <Filter>External\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\Imgui\imgui_widgets.cpp">
-      <Filter>External\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="External\Backends\imgui_impl_dx11.cpp">
-      <Filter>External\Backends</Filter>
-    </ClCompile>
-    <ClCompile Include="External\Backends\imgui_impl_win32.cpp">
-      <Filter>External\Backends</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
@@ -147,6 +129,10 @@
     </ClCompile>
     <ClCompile Include="Engine\Time.cpp">
       <Filter>01Engine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSetting.h" />
+    <ClCompile Include="StraightLineEnemy.cpp">
+      <Filter>Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,30 +216,6 @@
     <ClInclude Include="SpaceShuttle.h">
       <Filter>Play</Filter>
     </ClInclude>
-    <ClInclude Include="External\Imgui\imconfig.h">
-      <Filter>External\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Imgui\imgui.h">
-      <Filter>External\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Imgui\imgui_internal.h">
-      <Filter>External\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Imgui\imstb_rectpack.h">
-      <Filter>External\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Imgui\imstb_textedit.h">
-      <Filter>External\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Imgui\imstb_truetype.h">
-      <Filter>External\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Backends\imgui_impl_dx11.h">
-      <Filter>External\Backends</Filter>
-    </ClInclude>
-    <ClInclude Include="External\Backends\imgui_impl_win32.h">
-      <Filter>External\Backends</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>Enemy</Filter>
     </ClInclude>
@@ -262,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Time.h">
       <Filter>01Engine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="StraightLineEnemy.h">
+      <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

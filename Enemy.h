@@ -4,7 +4,9 @@ class Enemy :
     public GameObject
 {
 private:
-	
+
+protected:
+
 public:
 	Enemy(GameObject* parent);
 	void Initialize() override;
