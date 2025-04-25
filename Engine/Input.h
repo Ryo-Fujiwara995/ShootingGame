@@ -4,6 +4,9 @@
 #include <DirectXMath.h>
 #include "XInput.h"
 
+#define ZL_THRESHOLD  XINPUT_GAMEPAD_TRIGGER_THRESHOLD
+#define ZR_THRESHOLD  XINPUT_GAMEPAD_TRIGGER_THRESHOLD
+
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dInput8.lib")
 #pragma comment(lib, "Xinput.lib")
@@ -102,6 +105,18 @@ namespace Input
 	//右トリガーの押し込み具合を取得
 	//戻値:押し込み具合（0～1）
 	float		GetPadTrrigerR(int padID = 0);
+
+	//ZLが押されているか
+	bool iSPadZL(int padID = 0);
+
+	//ZLが押されているかの判定
+	bool IsPadZLDown(int padID = 0);
+
+	//ZRが押されているか
+	bool iSPadZR(int padID = 0);
+
+	//ZRが押されているかの判定
+	bool IsPadZRDown(int padID = 0);
 
 	//振動させる
 	void SetPadVibration(int l, int r, int padID = 0);

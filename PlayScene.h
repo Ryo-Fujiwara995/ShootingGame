@@ -3,6 +3,8 @@
 
 class PlayScene : public GameObject
 {
+private:
+	int hPict_;
 public:
 	PlayScene(GameObject* parent);
 	void Initialize() override;

@@ -163,7 +163,6 @@ void Player::Draw()
 		Model::SetTransform(hPlayerFloatingModel_, transform_);
 		// Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0f);
 		Model::Draw(hPlayerFloatingModel_);
-		break;
 
 	case PLAYER_ID_MAX:
 		break;

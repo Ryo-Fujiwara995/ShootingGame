@@ -4,16 +4,25 @@
 #include "Enemy.h"
 #include "SpiralEnemy.h"
 #include "StraightLineEnemy.h"
+#include "Engine/Image.h"
 #include "GameSetting.h"
-PlayScene::PlayScene(GameObject* parent)
+
+#include "Engine/Debug.h"
+#include "Engine/Input.h"
+PlayScene::PlayScene(GameObject* parent):GameObject(parent),hPict_(-1)
 {
 }
 
 void PlayScene::Initialize()
 {
+	// îwåi
+	hPict_ = Image::Load("Images\\space.png");
+
 	//Instantiate<SpaceShuttle>(this);
 	Player * player = Instantiate<Player>(this);
 	//Instantiate<Enemy>(this);
+
+	// 10ïbÇ≤Ç∆Ç…Ç«ÇøÇÁÇ©Çê∂ê¨Ç∑ÇÈó\íË
 	//for (int i = 0; i < SPIRAL_ENEMY_MAX; i++) {
 	//	auto spiralEnemy = Instantiate<SpiralEnemy>(this);
 	//	spiralEnemy->player_ = player;	// äeìGÇ…ã§í ÇÃPlayerÇê›íË
@@ -33,10 +42,17 @@ void PlayScene::Update()
 
 
 	*/
+
+	// GamePadÇÃÅõÅõÉLÅ[Ç™âüÇ≥ÇÍÇΩÇÁÅADebugLogÇèoóÕÇ∑ÇÈ -> ZR ZL ÇämîFÇµÇΩÇ¢
+	if (Input::IsPadButtonDown()) {
+		Debug::Log("Game Pad Log Pushed Success!!");
+	}
 }
 
 void PlayScene::Draw()
 {
+	Image::SetTransform(hPict_, transform_);
+	Image::Draw(hPict_);
 }
 
 void PlayScene::Release()
