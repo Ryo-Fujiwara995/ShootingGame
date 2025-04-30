@@ -6,7 +6,7 @@
 #include <algorithm>
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
 			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),
-			playerState_(), isRotateRight_(false), originalRotateRight_(0.0f), isRotateLeft_(false),originalRotateLeft_(0.0f)
+			playerState_(), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f)
 {
 }
 
@@ -32,51 +32,62 @@ void Player::Update()
 	if (!(playerState_ = PLAYER_ID_DEFAULT))
 		playerState_ = PLAYER_ID_DEFAULT; // 初期状態に戻す
 
-	// --- プレイヤー移動（左スティック） ---
-	XMFLOAT3 stickL = Input::GetPadStickL(0); // X:左右, Y:前後
-	if (fabs(stickL.x) > 0.05f || fabs(stickL.y) > 0.05f) {
-		const float moveSpeed = 0.2f;
+    // --- プレイヤー移動（左スティック） ---
+    XMFLOAT3 stickL = Input::GetPadStickL(0);
+    if (fabs(stickL.x) > 0.05f || fabs(stickL.y) > 0.05f) {
+        const float moveSpeed = 0.2f;
+        XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
+        XMVECTOR localMove = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f);
+        XMVECTOR worldMove = XMVector3Transform(localMove, rot);
+        worldMove = XMVectorScale(worldMove, moveSpeed);
+        XMVECTOR pos = XMLoadFloat3(&transform_.position_);
+        pos = XMVectorAdd(pos, worldMove);
+        XMStoreFloat3(&transform_.position_, pos);
+    }
 
-		// カメラのYawに合わせて入力を回転（カメラ基準で前進）
-		XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
-		XMVECTOR inputMove = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f); // Z = Y成分
-		XMVECTOR worldMove = XMVector3Transform(inputMove, rot);
-		worldMove = XMVectorScale(worldMove, moveSpeed);
+    // --- カメラ制御（右スティック） ---
+    XMFLOAT3 stickR = Input::GetPadStickR(0);
+    bool isZoomMode = Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER);
 
-		XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-		pos = XMVectorAdd(pos, worldMove);
-		XMStoreFloat3(&transform_.position_, pos);
-	}
+    if (isZoomMode) {
+        cameraDistance_ -= stickR.y * 0.2f;
+        cameraDistance_ = std::clamp(cameraDistance_, 5.0f, 20.0f);// Playerの最小・最大距離
+    }
+    else {
+        cameraYaw_ += stickR.x * 0.05f;
+        cameraPitch_ -= stickR.y * 0.05f;
+        cameraPitch_ = std::clamp(cameraPitch_, -XM_PIDIV4, XM_PIDIV4);
+    }
 
-	// --- カメラ制御（右スティック） ---
-	XMFLOAT3 stickR = Input::GetPadStickR(0);
-	bool isZoomMode = Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER); // Rボタン押下中はズーム
+    // --- カメラリセット（Yボタン） ---
+    if (Input::IsPadButtonDown(XINPUT_GAMEPAD_Y)) {
+        cameraYaw_ = 0.0f;
+        cameraPitch_ = 0.0f;
+        cameraDistance_ = 10.0f;
+    }
 
-	if (isZoomMode) {
-		cameraDistance_ -= stickR.y * 0.2f;
-		cameraDistance_ = std::clamp(cameraDistance_, 3.0f, 20.0f);
-	}
-	else {
-		cameraYaw_ += stickR.x * 0.05f;
-		cameraPitch_ -= stickR.y * 0.05f;
-		cameraPitch_ = std::clamp(cameraPitch_, -XM_PIDIV4, XM_PIDIV4);
-	}
+    // --- カメラ位置計算（回転 + 直線ズーム） ---
+    XMMATRIX rotMat = XMMatrixRotationRollPitchYaw(cameraPitch_, cameraYaw_, 0.0f);
+    XMVECTOR forward = XMVectorSet(0, 0, 1, 0);
+    XMVECTOR direction = XMVector3TransformNormal(forward, rotMat);
+    direction = XMVector3Normalize(direction);
 
-	// --- カメラ位置計算（Playerを中心に回転） ---
-	XMFLOAT3 playerPos = transform_.position_;
-	XMVECTOR playerVec = XMLoadFloat3(&playerPos);
+    XMVECTOR playerPos = XMLoadFloat3(&transform_.position_);
+    XMVECTOR cameraPos = XMVectorSubtract(playerPos, XMVectorScale(direction, cameraDistance_));
 
-	XMVECTOR offset = XMVectorSet(0, 2.0f, -cameraDistance_, 0); // カメラ基準のオフセット
-	XMMATRIX rot = XMMatrixRotationRollPitchYaw(cameraPitch_, cameraYaw_, 0.0f);
-	offset = XMVector3Transform(offset, rot);
+    // カメラに高さを加える（例：常に少し上から見下ろす）
+    XMVECTOR heightOffset = XMVectorSet(0, 2.5f, 0, 0);
+    cameraPos = XMVectorAdd(cameraPos, heightOffset);
 
-	XMVECTOR cameraVec = XMVectorAdd(playerVec, offset);
+    XMFLOAT3 camPos;
+    XMStoreFloat3(&camPos, cameraPos);
 
-	XMFLOAT3 camPos;
-	XMStoreFloat3(&camPos, cameraVec);
+    // 注視点をプレイヤーの頭付近に設定（自然に）
+    XMFLOAT3 target = transform_.position_;
+    target.y += 1.5f;
 
-	Camera::SetPosition(camPos);
-	Camera::SetTarget(playerPos); // 常にプレイヤーを見る
+    Camera::SetPosition(camPos);
+    Camera::SetTarget(target);
 
 
 	//--- カメラリセット ---
