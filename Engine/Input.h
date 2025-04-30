@@ -107,13 +107,13 @@ namespace Input
 	float		GetPadTrrigerR(int padID = 0);
 
 	//ZL‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
-	bool iSPadZL(int padID = 0);
+	bool ISPadZL(int padID = 0);
 
 	//ZL‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’è
 	bool IsPadZLDown(int padID = 0);
 
 	//ZR‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
-	bool iSPadZR(int padID = 0);
+	bool ISPadZR(int padID = 0);
 
 	//ZR‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ì”»’è
 	bool IsPadZRDown(int padID = 0);
@@ -121,7 +121,8 @@ namespace Input
 	//U“®‚³‚¹‚é
 	void SetPadVibration(int l, int r, int padID = 0);
 
-
+	// Player‚ª‘–‚é‚©
+	bool IsRunButton(int padId = 0);
 
 
 	//ŠJ•ú

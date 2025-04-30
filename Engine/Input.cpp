@@ -277,7 +277,7 @@ namespace Input
 		return GetAnalogValue(controllerState_[padID].Gamepad.bRightTrigger, 255, XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 	}
 
-	bool iSPadZL(int padID)
+	bool ISPadZL(int padID)
 	{
 		return (controllerState_[padID].Gamepad.bLeftTrigger >= ZL_THRESHOLD);
 
@@ -290,7 +290,7 @@ namespace Input
 
 	}
 
-	bool iSPadZR(int padID)
+	bool ISPadZR(int padID)
 	{
 		return (controllerState_[padID].Gamepad.bRightTrigger >= ZR_THRESHOLD);
 	}
@@ -309,6 +309,11 @@ namespace Input
 		vibration.wLeftMotorSpeed = l; // 左モーターの強さ
 		vibration.wRightMotorSpeed = r;// 右モーターの強さ
 		XInputSetState(padID, &vibration);
+	}
+
+	bool IsRunButton(int padId)
+	{
+		return (controllerState_[padId].Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
 	}
 
 }

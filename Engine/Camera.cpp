@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "Camera.h"
 #include "Direct3D.h"
 
 XMFLOAT3 _position;

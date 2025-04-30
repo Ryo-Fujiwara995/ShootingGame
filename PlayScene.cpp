@@ -18,7 +18,7 @@ void PlayScene::Initialize()
 	// 背景
 	hPict_ = Image::Load("Images\\space.png");
 
-	//Instantiate<SpaceShuttle>(this);
+	Instantiate<SpaceShuttle>(this);
 	Player * player = Instantiate<Player>(this);
 	//Instantiate<Enemy>(this);
 
@@ -29,24 +29,15 @@ void PlayScene::Initialize()
 	//	spiralEnemy->Initialize();		// 各敵にランダムな初期位置を設定
 	//}
 
-	for (int j = 0; j < STRAIGHT_LINE_ENEMY_MAX; j++) {
-		auto straightLineEnemy = Instantiate<StraightLineEnemy>(this);
-		straightLineEnemy->player_ = player;
-		straightLineEnemy->Initialize();
-	}
+	//for (int j = 0; j < STRAIGHT_LINE_ENEMY_MAX; j++) {
+	//	auto straightLineEnemy = Instantiate<StraightLineEnemy>(this);
+	//	straightLineEnemy->player_ = player;
+	//	straightLineEnemy->Initialize();
+	//}
 }
 
 void PlayScene::Update()
 {
-	/*
-
-
-	*/
-
-	// GamePadの○○キーが押されたら、DebugLogを出力する -> ZR ZL を確認したい
-	if (Input::IsPadButtonDown()) {
-		Debug::Log("Game Pad Log Pushed Success!!");
-	}
 }
 
 void PlayScene::Draw()

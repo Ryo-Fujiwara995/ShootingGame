@@ -3,6 +3,7 @@
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "GameSetting.h"
+#include <algorithm>
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
 			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),
 			playerState_(), isRotateRight_(false), originalRotateRight_(0.0f), isRotateLeft_(false),originalRotateLeft_(0.0f)
@@ -16,11 +17,11 @@ void Player::Initialize()
 	assert(hPlayerModel_ >= 0);
 
 	hPlayerSwimmingModel_ = Model::Load("Models\\Player\\PlayerSwimming.fbx");
-	Model::SetAnimFrame(hPlayerSwimmingModel_, 0, 136, 1.0);
+	//Model::SetAnimFrame(hPlayerSwimmingModel_, 0, 136, 1.0);
 	assert(hPlayerSwimmingModel_ >= 0);
 
 	hPlayerFloatingModel_ = Model::Load("Models\\Player\\PlayerFloating.fbx");
-	Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0);
+	//Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0);
 	assert(hPlayerFloatingModel_ >= 0);
 
 
@@ -31,114 +32,60 @@ void Player::Update()
 	if (!(playerState_ = PLAYER_ID_DEFAULT))
 		playerState_ = PLAYER_ID_DEFAULT; // 初期状態に戻す
 
-	// キーボード移動 WASDをGAMEPADでいう、左スティック。移動キーをGAMEPADでいう右スティックに見立てる
-	if (Input::IsKey(DIK_W)) {
-		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y += PLAYER_SPEED;
-		Model::GetAnimFrame(hPlayerFloatingModel_);
-	}
-	if (Input::IsKey(DIK_S)) {
-		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y -= PLAYER_SPEED;
-		Model::GetAnimFrame(hPlayerFloatingModel_);
-	}
-	if (Input::IsKey(DIK_A)) { // 左
-		playerState_ = PLAYER_ID_SWIM;
-		transform_.position_.x -= PLAYER_SPEED;
-		Model::GetAnimFrame(hPlayerSwimmingModel_);
-	}
-
-	if (Input::IsKey(DIK_D)) { // 右
-		playerState_ = PLAYER_ID_SWIM;
-		transform_.position_.x += PLAYER_SPEED;
-		Model::GetAnimFrame(hPlayerSwimmingModel_);
-	}
-
-	// 左右回転
-	if (Input::IsKey(DIK_LEFT)) {
-		transform_.rotate_.y += PLAYER_ROTATE_SPEED; // 右回転
-	}
-	if (Input::IsKey(DIK_RIGHT)) {
-		transform_.rotate_.y -= PLAYER_ROTATE_SPEED; // 左回転
-	}
-	// ------------------------------
-	// GAMEPADでの入力関連 左スティックで移動　右スティックで回転
-	// ------------------------------
-
-	// 左スティックの入力を取得（padID = 0:1P想定）
-	XMFLOAT3 stickL = Input::GetPadStickL(0);
-
-	// スティック入力が有効なときだけ処理（デッドゾーン対策）
+	// --- プレイヤー移動（左スティック） ---
+	XMFLOAT3 stickL = Input::GetPadStickL(0); // X:左右, Y:前後
 	if (fabs(stickL.x) > 0.05f || fabs(stickL.y) > 0.05f) {
 		const float moveSpeed = 0.2f;
 
-		// プレイヤーの回転（Y軸）を取得
-		float yaw = transform_.rotate_.y;
+		// カメラのYawに合わせて入力を回転（カメラ基準で前進）
+		XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
+		XMVECTOR inputMove = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f); // Z = Y成分
+		XMVECTOR worldMove = XMVector3Transform(inputMove, rot);
+		worldMove = XMVectorScale(worldMove, moveSpeed);
 
-		// 回転行列を作成（Y軸のみ）
-		XMMATRIX rotMatrix = XMMatrixRotationY(yaw);
-
-		// 入力から移動ベクトルを作成（Z = 前進）
-		XMVECTOR localMoveVec = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f);
-
-		// 回転を適用して「ワールド方向の移動ベクトル」に変換
-		XMVECTOR worldMoveVec = XMVector3Transform(localMoveVec, rotMatrix);
-
-		// 移動速度を反映
-		worldMoveVec = XMVectorScale(worldMoveVec, moveSpeed);
-
-		// 位置に加算
-		XMVECTOR posVec = XMLoadFloat3(&transform_.position_);
-		posVec = XMVectorAdd(posVec, worldMoveVec);
-		XMStoreFloat3(&transform_.position_, posVec);
+		XMVECTOR pos = XMLoadFloat3(&transform_.position_);
+		pos = XMVectorAdd(pos, worldMove);
+		XMStoreFloat3(&transform_.position_, pos);
 	}
 
-	// 泳ぐ　平泳ぎ的なの
-	if (fabs(Input::GetPadStickL(0).x) > 0.05f || fabs(Input::GetPadStickL(0).y) > 0.05f) {
-		playerState_ = PLAYER_ID_SWIM;
-	}
-	// 浮く　
-	if (Input::IsKey(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y += PLAYER_SPEED;
-	}
-	// 沈む　
-	if (Input::IsKey(XINPUT_GAMEPAD_LEFT_SHOULDER)) {
-		playerState_ = PLAYER_ID_FLOAT;
-		transform_.position_.y -= PLAYER_SPEED;
-	}
-	// 右スティックの入力を取得（padID = 0:1P想定）
+	// --- カメラ制御（右スティック） ---
 	XMFLOAT3 stickR = Input::GetPadStickR(0);
+	bool isZoomMode = Input::IsPadButton(XINPUT_GAMEPAD_RIGHT_SHOULDER); // Rボタン押下中はズーム
 
-	// スティックが少しでも傾いているときのみ回転
-	if (fabs(stickR.x) > 0.05f) {
-		const float rotateSpeed = 0.05f;
-		transform_.rotate_.y += -stickR.x * rotateSpeed;
+	if (isZoomMode) {
+		cameraDistance_ -= stickR.y * 0.2f;
+		cameraDistance_ = std::clamp(cameraDistance_, 3.0f, 20.0f);
+	}
+	else {
+		cameraYaw_ += stickR.x * 0.05f;
+		cameraPitch_ -= stickR.y * 0.05f;
+		cameraPitch_ = std::clamp(cameraPitch_, -XM_PIDIV4, XM_PIDIV4);
 	}
 
-	// ------------------------------
-	// カメラ追従（プレイヤー回転に応じて視点を調整）
-	// ------------------------------
-	//XMFLOAT3 offset = XMFLOAT3(0.0f, 3.0f, -8.0f);  // 後方＋上
-	XMFLOAT3 offset = XMFLOAT3(0.0f, 10.0f, -10.0f);  // 後方＋上
+	// --- カメラ位置計算（Playerを中心に回転） ---
+	XMFLOAT3 playerPos = transform_.position_;
+	XMVECTOR playerVec = XMLoadFloat3(&playerPos);
 
-	float yaw = transform_.rotate_.y;
-	XMMATRIX rotMatrix = XMMatrixRotationY(yaw);
+	XMVECTOR offset = XMVectorSet(0, 2.0f, -cameraDistance_, 0); // カメラ基準のオフセット
+	XMMATRIX rot = XMMatrixRotationRollPitchYaw(cameraPitch_, cameraYaw_, 0.0f);
+	offset = XMVector3Transform(offset, rot);
 
-	XMVECTOR offsetVec = XMVectorSet(offset.x, offset.y, offset.z, 0.0f);
-
-	XMVECTOR rotatedOffset = XMVector3Transform(offsetVec, rotMatrix);
-
-	XMVECTOR playerPosVec = XMLoadFloat3(&transform_.position_);
-	XMVECTOR camPosVec = XMVectorAdd(playerPosVec, rotatedOffset);
+	XMVECTOR cameraVec = XMVectorAdd(playerVec, offset);
 
 	XMFLOAT3 camPos;
-	XMStoreFloat3(&camPos, camPosVec);
+	XMStoreFloat3(&camPos, cameraVec);
 
-	Camera::SetPosition(camPos);                    // 視点
-	Camera::SetTarget(transform_.position_);        // 焦点（プレイヤー）
-	Camera::Update();                               // 行列更新
+	Camera::SetPosition(camPos);
+	Camera::SetTarget(playerPos); // 常にプレイヤーを見る
 
+
+	//--- カメラリセット ---
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+		// カメラ方向と距離をリセット
+		cameraYaw_ = 0.0f;
+		cameraPitch_ = 0.0f;
+		cameraDistance_ = initCameraDistance_;
+	}
 }
 
 void Player::Draw()
