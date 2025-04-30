@@ -59,13 +59,6 @@ void Player::Update()
         cameraPitch_ = std::clamp(cameraPitch_, -XM_PIDIV4, XM_PIDIV4);
     }
 
-    // --- カメラリセット（Yボタン） ---
-    if (Input::IsPadButtonDown(XINPUT_GAMEPAD_Y)) {
-        cameraYaw_ = 0.0f;
-        cameraPitch_ = 0.0f;
-        cameraDistance_ = 10.0f;
-    }
-
     // --- カメラ位置計算（回転 + 直線ズーム） ---
     XMMATRIX rotMat = XMMatrixRotationRollPitchYaw(cameraPitch_, cameraYaw_, 0.0f);
     XMVECTOR forward = XMVectorSet(0, 0, 1, 0);
@@ -88,10 +81,10 @@ void Player::Update()
 
     Camera::SetPosition(camPos);
     Camera::SetTarget(target);
-
+   // IsPadZRDown
 
 	//--- カメラリセット ---
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_THUMB)) {// Rスティック押し込み
 		// カメラ方向と距離をリセット
 		cameraYaw_ = 0.0f;
 		cameraPitch_ = 0.0f;
@@ -124,6 +117,8 @@ void Player::Draw()
 
 	case PLAYER_ID_MAX:
 		break;
+    default:
+        break;
 	}
 }
 
