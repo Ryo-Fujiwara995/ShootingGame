@@ -11,24 +11,31 @@ class Player :
 {
 
 private:
+	// モデル関係
 	int hPlayerModel_;
 	int hPlayerSwimmingModel_;
 	int hPlayerFloatingModel_;
+
+	const float playerMoveSpeed_; // Playerの移動速度
+	
 	PLAYER_ID playerState_;
+	
+	// 回転関係
 	bool isRotateRight_;
-	float originalRotateRight_;
-
+	float originalRotateRight_; // 右回転を始めたときの角度や変化量
 	bool isRotateLeft_;
-	float originalRotateLeft_;
+	float originalRotateLeft_; // 左回転を始めたときの角度や変化量
 
-	const float WALK_SPEED = 0.2f;
-	const float RUN_SPEED = 0.5f; // WALK_SPEEDより大きい値に
 
-	// 回転用の角度変数（Playerクラスに追加してください）
-	float cameraYaw_ = 0.0f;
-	float cameraPitch_ = 0.0f;
-	float cameraDistance_ = 10.0f; // ← 追加：ズーム距離（初期値10）
-	const float initCameraDistance_ = 10.0f;// カメラリセット用
+	// カメラ関係
+	float cameraYaw_; // 左右(Y軸周り)
+	float cameraPitch_; // 上下(X軸周り)
+	float cameraDistance_; // ズーム距離（初期値10）
+	const float initCameraDistance_;// カメラリセット用
+	const float cameraZoomSpeed_; // ズームスピード
+	const float cameraMinDistance_; // ズームの最小距離
+	const float cameraMaxDistance_; // ズームの最大距離
+	const float cameraRotateSpeed_; // カメラの回転速度
 public:
 	Player(GameObject* parent);
 	void Initialize() override;
@@ -36,7 +43,7 @@ public:
 	void Draw() override;
 	void Release() override;
 	
-	// Playerのポジションを外でとってくるために使用
+	// PlayerのポジションをEnemyでとってくるために使用
 	DirectX::XMFLOAT3& GetPosition() { return transform_.position_; }
 	
 };

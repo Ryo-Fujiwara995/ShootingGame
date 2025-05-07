@@ -277,30 +277,6 @@ namespace Input
 		return GetAnalogValue(controllerState_[padID].Gamepad.bRightTrigger, 255, XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 	}
 
-	bool ISPadZL(int padID)
-	{
-		return (controllerState_[padID].Gamepad.bLeftTrigger >= ZL_THRESHOLD);
-
-	}
-
-	bool IsPadZLDown(int padID)
-	{
-		return (controllerState_[padID].Gamepad.bLeftTrigger >= ZL_THRESHOLD)
-			&& (prevControllerState_[padID].Gamepad.bLeftTrigger < ZL_THRESHOLD);
-
-	}
-
-	bool ISPadZR(int padID)
-	{
-		return (controllerState_[padID].Gamepad.bRightTrigger >= ZR_THRESHOLD);
-	}
-
-	bool IsPadZRDown(int padID)
-	{
-		return (controllerState_[padID].Gamepad.bRightTrigger >= ZR_THRESHOLD)
-			&& (prevControllerState_[padID].Gamepad.bRightTrigger < ZR_THRESHOLD);
-	}
-
 	//U“®‚³‚¹‚é
 	void SetPadVibration(int l, int r, int padID)
 	{

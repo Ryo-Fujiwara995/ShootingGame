@@ -1,17 +1,12 @@
 #pragma once
 #include "Engine/GameObject.h"
-class Enemy :
-    public GameObject
+
+class ClearScene : public GameObject
 {
-private:
-
-protected:
-
 public:
-	Enemy(GameObject* parent);
+	ClearScene(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 	void Release() override;
 };
-

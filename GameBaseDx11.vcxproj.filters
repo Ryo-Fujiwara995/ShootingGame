@@ -39,6 +39,15 @@
     <Filter Include="Enemy">
       <UniqueIdentifier>{e385d94a-587c-44ef-a668-5660c72b4479}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Title">
+      <UniqueIdentifier>{8ebdf958-7440-454b-99c7-b1b1ac55c7a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Clear">
+      <UniqueIdentifier>{d0d85556-864c-4d11-8bd1-199f8c1701a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameOver">
+      <UniqueIdentifier>{0a6f3258-fa2b-48d9-9bfa-af5b3278cc2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\BoxCollider.cpp">
@@ -111,7 +120,6 @@
     <ClCompile Include="Engine\VFX.cpp">
       <Filter>01Engine\ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Player.cpp">
       <Filter>Play</Filter>
     </ClCompile>
@@ -120,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="SpaceShuttle.cpp">
       <Filter>Play</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Enemy</Filter>
     </ClCompile>
     <ClCompile Include="SpiralEnemy.cpp">
       <Filter>Enemy</Filter>
@@ -133,6 +138,15 @@
     <ClCompile Include="GameSetting.h" />
     <ClCompile Include="StraightLineEnemy.cpp">
       <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Title</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScene.cpp">
+      <Filter>GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="ClearScene.cpp">
+      <Filter>Clear</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,7 +220,6 @@
     <ClInclude Include="Engine\VFX.h">
       <Filter>01Engine\ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Player.h">
       <Filter>Play</Filter>
     </ClInclude>
@@ -216,9 +229,6 @@
     <ClInclude Include="SpaceShuttle.h">
       <Filter>Play</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="SpiralEnemy.h">
       <Filter>Enemy</Filter>
     </ClInclude>
@@ -227,6 +237,15 @@
     </ClInclude>
     <ClInclude Include="StraightLineEnemy.h">
       <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Title</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScene.h">
+      <Filter>GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearScene.h">
+      <Filter>Clear</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

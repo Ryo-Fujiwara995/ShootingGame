@@ -1,20 +1,20 @@
 #pragma once
-#include "Enemy.h"
 #include "Player.h"
+#include "Engine/GameObject.h"
 #include "GameSetting.h"
 /// <summary>
 /// Playerを見つけたらまっすぐ進む敵クラス
 /// </summary>
 class StraightLineEnemy :
-    public Enemy
+    public GameObject
 {
 private:
 	int hStraightLineEnemyModel_;
 
     bool lockedOn_ = false;
     XMFLOAT3 targetPos_;
-    float speed_ = STRAIGHT_LINE_ENEMY_SPEED; // 進行速度
-    float stopRadius_ = STRAIGHT_LINE_ENEMY_STOP_RADIUS; // 到達半径速度
+    float speed_ = 5.0f; // 進行速度
+    float stopRadius_ = 0.5f; // 到達半径速度
 public:
 	StraightLineEnemy(GameObject* parent);
 	void Initialize() override;

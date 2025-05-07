@@ -1,24 +1,24 @@
 #pragma once
-#include "Enemy.h"
 #include "Player.h"
+#include "Engine/GameObject.h"
 #include "GameSetting.h"
 /// <summary>
 /// 螺旋接近型の敵クラス
 /// </summary>
-class SpiralEnemy :public Enemy
+class SpiralEnemy:public GameObject
 {
 private:
 	int hSpiralEnemyDefaultModel_;
-	float angle_ = SPIRAL_ENEMY_ANGLE;
-	float angularSpeed_ = SPIRAL_ENEMY_ANGULAR_SPEED;
-	float radius_ = SPIRAL_ENEMY_RADIUS;
-	float radialSpeed_ = SPIRAL_ENEMY_RADIAL_SPEED;
+	float angle_ = 0.0f;
+	float angularSpeed_ = 1.5f;
+	float radius_ = 30.0f;
+	float radialSpeed_ = 5.0f;
 
 	bool enteredProximity_ = false; // プレイヤー範囲に入ったか
-	float timeSinceEntered_ = SPIRAL_ENEMY_TIME_SINCE_ENTERED;
+	float timeSinceEntered_ = 0.0f;
 
-	const float proximityRadius = SPIRAL_ENEMY_PROXIMITY_RADIUS;
-	const float disappearAfter = SPIRAL_ENEMY_DISAPPEAR_AFTER;
+	const float proximityRadius = 5.0f;
+	const float disappearAfter = 2.0f;
 public:
 	Player* player_ = nullptr;
 	SpiralEnemy(GameObject* parent);

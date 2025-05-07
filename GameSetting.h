@@ -1,9 +1,8 @@
 //-------------------------------------
 // Player設定
 //-------------------------------------
-#define PLAYER_SPEED 0.1f // Playerの移動速度
-#define PLAYER_ROTATE_SPEED 0.05f // Playerの回転速度
-
+//#define PLAYER_SPEED 0.1f // Playerの移動速度
+//#define PLAYER_ROTATE_SPEED 0.05f // Playerの回転速度
 //-------------------------------------
 // Enemy関連
 //-------------------------------------
@@ -36,4 +35,6 @@
 //-------------------------------------
 // その他
 //-------------------------------------
-#define FLOAT_ZERO_THRESHOLD 0.0001f  // しきい値
+#define INVALID_MODEL_HANDLE 0 // assert(hModel_ >= 0)モデルの読み込みが成功しているかを判定するための基準値
+#define FLOAT_ZERO_THRESHOLD 0.0001f // しきい値
+

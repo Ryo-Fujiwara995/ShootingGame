@@ -4,9 +4,6 @@
 #include <DirectXMath.h>
 #include "XInput.h"
 
-#define ZL_THRESHOLD  XINPUT_GAMEPAD_TRIGGER_THRESHOLD
-#define ZR_THRESHOLD  XINPUT_GAMEPAD_TRIGGER_THRESHOLD
-
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dInput8.lib")
 #pragma comment(lib, "Xinput.lib")
@@ -19,6 +16,8 @@ using namespace DirectX;
 //-----------------------------------------------------------
 namespace Input
 {
+	constexpr float StickDeadZone = 0.05f;// スティックのデッドゾーン
+	constexpr int PLAYER_ONE_PAD_ID = 0; // PlayerのPadID
 	//初期化
 	//引数：hWnd	ウィンドウハンドル
 	void Initialize(HWND hWnd);
@@ -106,18 +105,6 @@ namespace Input
 	//戻値:押し込み具合（0～1）
 	float		GetPadTrrigerR(int padID = 0);
 
-	//ZLが押されているか
-	bool ISPadZL(int padID = 0);
-
-	//ZLが押されているかの判定
-	bool IsPadZLDown(int padID = 0);
-
-	//ZRが押されているか
-	bool ISPadZR(int padID = 0);
-
-	//ZRが押されているかの判定
-	bool IsPadZRDown(int padID = 0);
-
 	//振動させる
 	void SetPadVibration(int l, int r, int padID = 0);
 
@@ -127,4 +114,5 @@ namespace Input
 
 	//開放
 	void Release();
+
 };

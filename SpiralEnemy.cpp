@@ -2,14 +2,14 @@
 #include "Engine/Model.h"
 #include "Engine/Time.h"
 
-SpiralEnemy::SpiralEnemy(GameObject* parent) :Enemy(parent), hSpiralEnemyDefaultModel_(-1)
+SpiralEnemy::SpiralEnemy(GameObject* parent) :GameObject(parent, "SpiralEnemy"), hSpiralEnemyDefaultModel_(-1)
 {
 }
 
 void SpiralEnemy::Initialize()
 {
     hSpiralEnemyDefaultModel_ = Model::Load("Models\\Enemy\\EnemyDefault.fbx");
-    assert(hSpiralEnemyDefaultModel_ >= 0);
+    assert(hSpiralEnemyDefaultModel_ >= INVALID_MODEL_HANDLE);
 
     if (!player_) return;
 

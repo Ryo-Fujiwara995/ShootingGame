@@ -1,18 +1,17 @@
 ﻿#include "StraightLineEnemy.h"
 #include "Engine/Model.h"
 #include "Engine/Time.h"
-#include "GameSetting.h"
 #include <cmath>
 #include <cstdlib> // rand()
-StraightLineEnemy::StraightLineEnemy(GameObject* parent)
-	: Enemy(parent), hStraightLineEnemyModel_(-1)
+StraightLineEnemy::StraightLineEnemy(GameObject* parent) :GameObject(parent, "StraightLineEnemy")
+        ,hStraightLineEnemyModel_(-1)
 {
 }
 
 void StraightLineEnemy::Initialize()
 {
     hStraightLineEnemyModel_ = Model::Load("Models\\Enemy\\EnemyStraightLine.fbx");
-	assert(hStraightLineEnemyModel_ >= 0);
+	assert(hStraightLineEnemyModel_ >= INVALID_MODEL_HANDLE);
 
     if (!player_) return;
 
