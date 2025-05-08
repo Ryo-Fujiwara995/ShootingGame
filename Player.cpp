@@ -97,7 +97,7 @@ void Player::Update()
 	}
 
     //-------------------------
-	// keyboard input
+	// keyboard input for player
     //-------------------------
     // --- キーボード移動処理（左右） ---
     if (Input::IsKey(DIK_A) || Input::IsKey(DIK_D))
