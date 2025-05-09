@@ -136,12 +136,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//エフェクトの描画
 				VFX::Draw();
 
+				// そして、最後にモザイク処理をかけて画面に表示
+				Direct3D::DrawMosaicPostEffect(sceneSRV_,cbMosaicBuffer_,fullscreenVB_,playerScreenUV,50.0f);
+
 				//描画終了
 				Direct3D::EndDraw();
 
-
-
-				
 				//ちょっと休ませる
 				Sleep(1);
 			}

@@ -28,7 +28,7 @@ namespace Direct3D
 
 
 	//■シェーダー関連で必要なセット
-	enum SHADER_TYPE{SHADER_3D, SHADER_2D, SHADER_UNLIT, SHADER_BILLBOARD, SHADER_MAX};	//3タイプ（3D用、2D用、当たり判定枠表示用）
+	enum SHADER_TYPE{SHADER_3D, SHADER_2D, SHADER_UNLIT, SHADER_BILLBOARD, SHADER_POSTEFFECT, SHADER_MAX};	//4タイプ（3D用、2D用、当たり判定枠表示用、モザイク）
 	struct SHADER_BUNDLE
 	{
 		//【頂点入力レイアウト情報】
@@ -47,6 +47,10 @@ namespace Direct3D
 		//【ラスタライザ】
 		//頂点の表示位置確定後、画面のどのピクセルを光らせればいいか求めるもの
 		ID3D11RasterizerState*	pRasterizerState;
+
+		// 【サンプラーステート】
+		// テクスチャのサンプリング方法を指定するもの
+		ID3D11SamplerState* pSampler;
 	};
 
 	//■ブレンドモード
@@ -108,5 +112,6 @@ namespace Direct3D
 	//Zバッファへの書き込みON/OFF
 	//引数：isWrite	  true=書き込みON／false=書き込みOFF
 	void SetDepthBafferWriteEnable(bool isWrite);
+	void DrawMosaicPostEffect(ID3D11ShaderResourceView* sceneSRV,ID3D11Buffer* cbMosaicBuffer,ID3D11Buffer* fullscreenVB,DirectX::XMFLOAT2 playerScreenPos,float radiusPx);
 };
 

@@ -16,6 +16,10 @@ namespace Direct3D
 	//描画したいものと、描画先（上でいう画用紙）の橋渡しをするもの
 	ID3D11RenderTargetView* pRenderTargetView_ = nullptr;
 
+	//【シーン描画用のレンダーターゲットビュー】
+	ID3D11RenderTargetView* sceneRTV_ = nullptr;        // シーン描画用RTV（出力先）
+	ID3D11ShaderResourceView* sceneSRV_ = nullptr;      // シーン描画結果のSRV（ポストエフェクト用）
+
 	//【デプスステンシル】
 	//Zバッファ法を用いて、3D物体の前後関係を正しく表示するためのもの
 	ID3D11Texture2D*		pDepthStencil;
@@ -42,6 +46,9 @@ namespace Direct3D
 	int						screenHeight_ = 0;
 
 
+
+	ID3D11Buffer* fullscreenVB_ = nullptr;
+	ID3D11Buffer* cbPostEffectBuffer_ = nullptr;
 
 	//初期化処理
 	HRESULT Direct3D::Initialize(HWND hWnd, int screenWidth, int screenHeight)
@@ -193,16 +200,86 @@ namespace Direct3D
 			pDevice_->CreateBlendState(&BlendDesc, &pBlendState[BLEND_ADD]);
 		}
 
+		//--------------------------------------------
+		// フルスクリーンクアッド作成 モザイク用
+		//--------------------------------------------
+		{
+			struct FSQVertex {
+				XMFLOAT3 pos;
+				XMFLOAT2 uv;
+			};
+
+			FSQVertex quadVertices[4] = {
+				{ {-1.0f,  1.0f, 0.0f}, {0.0f, 0.0f} },
+				{ { 1.0f,  1.0f, 0.0f}, {1.0f, 0.0f} },
+				{ {-1.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
+				{ { 1.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
+			};
+
+			D3D11_BUFFER_DESC vbDesc = {};
+			vbDesc.Usage = D3D11_USAGE_DEFAULT;
+			vbDesc.ByteWidth = sizeof(FSQVertex) * 4;
+			vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+			D3D11_SUBRESOURCE_DATA initData = {};
+			initData.pSysMem = quadVertices;
+
+			pDevice_->CreateBuffer(&vbDesc, &initData, &fullscreenVB_);
+		}
+		// --- モザイク用定数バッファの作成 ---
+		{
+			D3D11_BUFFER_DESC cbDesc = {};
+			cbDesc.Usage = D3D11_USAGE_DEFAULT;
+			cbDesc.ByteWidth = sizeof(XMFLOAT4) * 3;
+			cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			cbDesc.CPUAccessFlags = 0;
+			cbDesc.MiscFlags = 0;
+
+			pDevice_->CreateBuffer(&cbDesc, nullptr, &cbPostEffectBuffer_);
+		}
+
+		ID3D11Texture2D* sceneTex_ = nullptr;
+		ID3D11RenderTargetView* sceneRTV_ = nullptr;
+		ID3D11ShaderResourceView* sceneSRV_ = nullptr;
+
+		// --- シーン描画用のレンダリングターゲットテクスチャを作成 ---
+		{
+			D3D11_TEXTURE2D_DESC texDesc = {};
+			texDesc.Width = screenWidth_;
+			texDesc.Height = screenHeight_;
+			texDesc.MipLevels = 1;
+			texDesc.ArraySize = 1;
+			texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			texDesc.SampleDesc.Count = 1;
+			texDesc.Usage = D3D11_USAGE_DEFAULT;
+			texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+			// テクスチャ作成
+			HRESULT hr = pDevice_->CreateTexture2D(&texDesc, nullptr, &sceneTex_);
+			if (FAILED(hr)) return hr;
+
+			// レンダーターゲットビュー作成
+			hr = pDevice_->CreateRenderTargetView(sceneTex_, nullptr, &sceneRTV_);
+			if (FAILED(hr)) return hr;
+
+			// シェーダーリソースビュー作成
+			hr = pDevice_->CreateShaderResourceView(sceneTex_, nullptr, &sceneSRV_);
+			if (FAILED(hr)) return hr;
+
+			// 不要になったテクスチャは解放（ビューが参照を保持してるため）
+			sceneTex_->Release();
+		}
+
+
+		
+		
+		//-------------------------------------------------------------------------------------
+		
 		//パイプラインの構築
 		//データを画面に描画するための一通りの設定
 		pContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  // データの入力種類を指定
 		pContext_->OMSetRenderTargets(1, &pRenderTargetView_, pDepthStencilView);            // 描画先を設定（今後はレンダーターゲットビューを介して描画してね）
 		pContext_->RSSetViewports(1, &vp);                                      // ビューポートのセット
-
-
-
-
-
 
 		//コリジョン表示するか
 		isDrawCollision_ = GetPrivateProfileInt("DEBUG", "ViewCollider", 0, ".\\setup.ini") != 0;
@@ -210,6 +287,8 @@ namespace Direct3D
 
 		screenWidth_ = screenWidth;
 		screenHeight_ = screenHeight;
+
+
 
 		return S_OK;
 	}
@@ -357,6 +436,35 @@ namespace Direct3D
 			pDevice_->CreateRasterizerState(&rdc, &shaderBundle[SHADER_BILLBOARD].pRasterizerState);
 		}
 
+		// PostEffect
+		{
+			// 頂点シェーダの作成（コンパイル）
+			ID3DBlob* pCompileVS = NULL;
+			D3DCompileFromFile(L"Shader/PostEffect.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+			pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_POSTEFFECT].pVertexShader);
+
+			// ピクセルシェーダの作成（コンパイル）
+			ID3DBlob* pCompilePS = NULL;
+			D3DCompileFromFile(L"Shader/PostEffect.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+			pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_POSTEFFECT].pPixelShader);
+
+			// 頂点レイアウト（2D用と同じ）
+			D3D11_INPUT_ELEMENT_DESC layout[] = {
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,                 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT   , 0, sizeof(float) * 3,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			};
+			pDevice_->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &shaderBundle[SHADER_POSTEFFECT].pVertexLayout);
+
+			pCompileVS->Release();
+			pCompilePS->Release();
+
+			// ラスタライザ
+			D3D11_RASTERIZER_DESC rdc = {};
+			rdc.CullMode = D3D11_CULL_NONE;
+			rdc.FillMode = D3D11_FILL_SOLID;
+			pDevice_->CreateRasterizerState(&rdc, &shaderBundle[SHADER_POSTEFFECT].pRasterizerState);
+		}
+
 	}
 
 
@@ -439,6 +547,12 @@ namespace Direct3D
 		SAFE_RELEASE(pSwapChain_);
 		SAFE_RELEASE(pContext_);
 		SAFE_RELEASE(pDevice_);
+
+
+		SAFE_RELEASE(sceneRTV_);
+		SAFE_RELEASE(sceneSRV_);
+		SAFE_RELEASE(fullscreenVB_);
+		SAFE_RELEASE(cbPostEffectBuffer_);
 	}
 
 
@@ -511,5 +625,41 @@ namespace Direct3D
 			pContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
 		}
 	}
+
+
+	void DrawMosaicPostEffect(
+		ID3D11ShaderResourceView* sceneSRV,
+		ID3D11Buffer* cbMosaicBuffer,
+		ID3D11Buffer* fullscreenVB,
+		DirectX::XMFLOAT2 playerScreenPos,
+		float radiusPx)
+	{
+		SetShader(SHADER_POSTEFFECT);
+
+		struct CBMosaic {
+			DirectX::XMFLOAT2 playerScreenPos;
+			float radius;
+			DirectX::XMFLOAT2 screenSize;
+		};
+
+		CBMosaic cbData;
+		cbData.playerScreenPos = playerScreenPos;
+		cbData.radius = radiusPx / static_cast<float>(screenWidth_);
+		cbData.screenSize = { static_cast<float>(screenWidth_), static_cast<float>(screenHeight_) };
+
+		pContext_->UpdateSubresource(cbMosaicBuffer, 0, nullptr, &cbData, 0, 0);
+		pContext_->PSSetConstantBuffers(0, 1, &cbMosaicBuffer);
+		pContext_->PSSetShaderResources(0, 1, &sceneSRV);
+		pContext_->PSSetSamplers(0, 1, &shaderBundle[SHADER_POSTEFFECT].pSampler); // ←必要に応じてサンプラも
+
+		UINT stride = sizeof(float) * 5;
+		UINT offset = 0;
+		pContext_->IASetInputLayout(shaderBundle[SHADER_POSTEFFECT].pVertexLayout);
+		pContext_->IASetVertexBuffers(0, 1, &fullscreenVB, &stride, &offset);
+		pContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		pContext_->Draw(4, 0);
+	}
+
+
 
 }
