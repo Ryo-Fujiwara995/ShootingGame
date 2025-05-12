@@ -1,6 +1,5 @@
 #include "SpaceShuttle.h"
 #include "Engine/Model.h"
-
 SpaceShuttle::SpaceShuttle(GameObject* parent):GameObject(parent,"SpaceShuttle"),hSpaceShuttleModel_(-1)
 {
 }

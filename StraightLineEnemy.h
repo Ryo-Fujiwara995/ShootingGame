@@ -3,7 +3,7 @@
 #include "Engine/GameObject.h"
 #include "GameSetting.h"
 /// <summary>
-/// Playerを見つけたらまっすぐ進む敵クラス
+/// Playerを見つけたら、見つけた時点でのPlayerのポジションに向かってまっすぐ進む敵クラス
 /// </summary>
 class StraightLineEnemy :
     public GameObject
@@ -22,5 +22,4 @@ public:
 	void Draw() override;
 	void Release() override;
     Player* player_ = nullptr;
-	//　Playerを見つけたら、見つけた時点でのPlayerのポジションに向かってまっすぐ進む敵クラスを実装したい
 };

@@ -1,7 +1,7 @@
 #include "SpiralEnemy.h"
 #include "Engine/Model.h"
 #include "Engine/Time.h"
-
+#include "Engine/SphereCollider.h"
 SpiralEnemy::SpiralEnemy(GameObject* parent) :GameObject(parent, "SpiralEnemy"), hSpiralEnemyDefaultModel_(-1)
 {
 }
@@ -35,6 +35,8 @@ void SpiralEnemy::Update()
     float deltaTime = Time::GetDeltaTime();
     const XMFLOAT3& playerPos = player_->GetPosition();
 
+    SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.2f);
+    AddCollider(collision);
 
     // —†ùˆÚ“®
     angle_ += angularSpeed_ * deltaTime;
@@ -59,7 +61,8 @@ void SpiralEnemy::Update()
         else {
             timeSinceEntered_ += deltaTime;
             if (timeSinceEntered_ >= disappearAfter) {
-                KillMe();
+                //KillMe();
+
             }
         }
     }

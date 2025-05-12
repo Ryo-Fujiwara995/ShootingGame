@@ -4,6 +4,7 @@
 #include "Engine/Camera.h"
 #include "GameSetting.h"
 #include "Engine/CsvReader.h"
+#include "Engine/Image.h"
 #include <algorithm>
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
 			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),playerMoveSpeed_(0.2f),
@@ -95,7 +96,6 @@ void Player::Update()
 		cameraPitch_ = 0.0f;
 		cameraDistance_ = initCameraDistance_;
 	}
-
     //-------------------------
 	// keyboard input for player
     //-------------------------
@@ -114,9 +114,8 @@ void Player::Update()
         XMVECTOR moveVec = XMVectorScale(rightVec, moveDir * playerMoveSpeed_);
         XMVECTOR pos = XMLoadFloat3(&transform_.position_);
         pos = XMVectorAdd(pos, moveVec);
-        XMStoreFloat3(&transform_.position_, pos); ///
+        XMStoreFloat3(&transform_.position_, pos);
     }
-
 
 }
 
@@ -140,13 +139,12 @@ void Player::Draw()
 	case PLAYER_ID_FLOAT:	// 0 - 40 fps
 		Model::SetTransform(hPlayerFloatingModel_, transform_);
 		// Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0f);
-		Model::Draw(hPlayerFloatingModel_);
+	    Model::Draw(hPlayerFloatingModel_);
 
 	case PLAYER_ID_MAX:
 		break;
-    default:
-        break;
 	}
+    
 }
 
 void Player::Release()
