@@ -13,6 +13,9 @@ void StraightLineEnemy::Initialize()
     hStraightLineEnemyModel_ = Model::Load("Models\\Enemy\\EnemyStraightLine.fbx");
 	assert(hStraightLineEnemyModel_ >= INVALID_MODEL_HANDLE);
 
+    SphereCollider* collider = new SphereCollider(XMFLOAT3(0, 0, 0), 1.2f);
+    AddCollider(collider);
+
     if (!player_) return;
 
     // プレイヤー位置取得
@@ -36,6 +39,12 @@ void StraightLineEnemy::Update()
     if (!lockedOn_) return;
 
     float dt = Time::GetDeltaTime();
+    elapsedTime_ += dt; // 時間を加算
+
+    if (elapsedTime_ >= lifeTime_) {
+        KillMe(); // 5秒経過したら自動で全部削除
+    }
+
     XMFLOAT3& myPos = transform_.position_;
 
     // ロックオン位置へのベクトル
@@ -46,9 +55,6 @@ void StraightLineEnemy::Update()
     };
 
     float distSq = dir.x * dir.x + dir.y * dir.y + dir.z * dir.z;
-    if (distSq < stopRadius_ * stopRadius_) {
-        KillMe();
-    }
 
     float len = sqrtf(distSq);
     if (len > FLOAT_ZERO_THRESHOLD) {
@@ -70,4 +76,11 @@ void StraightLineEnemy::Draw()
 
 void StraightLineEnemy::Release()
 {
+}
+
+void StraightLineEnemy::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "Player") {
+		KillMe();
+	}
 }

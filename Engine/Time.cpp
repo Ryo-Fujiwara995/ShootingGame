@@ -1,30 +1,31 @@
 #include "Time.h"
-#include <windows.h>
 
-namespace Time {
-    static LARGE_INTEGER frequency;
-    static LARGE_INTEGER prevCounter;
-    static float deltaTime = 0.0f;
+LARGE_INTEGER Time::frequency_;
+LARGE_INTEGER Time::previousTime_;
+float Time::deltaTime_ = 0.0f;
 
-    void Initialize() {
-        QueryPerformanceFrequency(&frequency);
-        QueryPerformanceCounter(&prevCounter);
-    }
+void Time::Initialize()
+{
+    QueryPerformanceFrequency(&frequency_);
+    QueryPerformanceCounter(&previousTime_);
+}
 
-    void Update() {
-        LARGE_INTEGER current;
-        QueryPerformanceCounter(&current);
-        deltaTime = static_cast<float>(current.QuadPart - prevCounter.QuadPart) / frequency.QuadPart;
-        prevCounter = current;
-    }
+void Time::Update()
+{
+    LARGE_INTEGER currentTime;
+    QueryPerformanceCounter(&currentTime);
 
-    float GetDeltaTime() {
-        return deltaTime;
-    }
-    void AllRelease() {
-        // ç°ÇÃÇ∆Ç±ÇÎâï˙ëŒè€ÇÕÇ»ÇµÅiîOÇÃÇΩÇﬂÅj
-        deltaTime = 0.0f;
-        frequency.QuadPart = 0;
-        prevCounter.QuadPart = 0;
-    }
+    deltaTime_ = static_cast<float>(currentTime.QuadPart - previousTime_.QuadPart) / frequency_.QuadPart;
+    previousTime_ = currentTime;
+}
+
+float Time::GetDeltaTime()
+{
+    return deltaTime_;
+}
+
+void Time::AllRelease()
+{
+    previousTime_.QuadPart = 0;
+    deltaTime_ = 0.0f;
 }

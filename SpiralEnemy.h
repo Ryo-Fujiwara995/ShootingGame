@@ -15,10 +15,10 @@ private:
 	float radialSpeed_ = 5.0f;
 
 	bool enteredProximity_ = false; // プレイヤー範囲に入ったか
-	float timeSinceEntered_ = 0.0f;
+	float timeSinceEntered_ = 0.0f; // プレイヤー範囲に入ってからの時間
 
-	const float proximityRadius = 5.0f;
-	const float disappearAfter = 2.0f;
+	const float proximityRadius = 5.0f; // プレイヤーとの接触範囲
+	const float disappearAfter = 2.0f;  // プレイヤー範囲に入ってからの消滅時間
 public:
 	Player* player_ = nullptr;
 	SpiralEnemy(GameObject* parent);

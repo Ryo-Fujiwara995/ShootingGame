@@ -29,6 +29,9 @@ void Player::Initialize()
 	//Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0);
 	assert(hPlayerFloatingModel_ >= INVALID_MODEL_HANDLE);
 
+    SphereCollider* playerCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);
+    AddCollider(playerCollider);
+
     // Csvファイルの読み込み
     CsvReader playerCsv;
     playerCsv.Load("Csv\\PlayerSetting.csv");
@@ -38,6 +41,8 @@ void Player::Update()
 {
 	if (!(playerState_ = PLAYER_ID_DEFAULT))
 		playerState_ = PLAYER_ID_DEFAULT; // 初期状態に戻す
+
+
 
     // --- プレイヤー移動（左スティック） ---
     XMFLOAT3 stickL = Input::GetPadStickL();
@@ -149,4 +154,27 @@ void Player::Draw()
 
 void Player::Release()
 {
+}
+
+void Player::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "SpiralEnemy")
+	{
+		//hp_ -= 1;
+		//if (hp_ <= 0)
+		//{
+		//	//KillMe();
+		//}
+        KillMe();
+	}
+
+    if (pTarget->GetObjectName() == "StraightLineEnemy")
+    {
+        //hp_ -= 1;
+        //if (hp_ <= 0)
+        //{
+        //    //KillMe();
+        //}
+        KillMe();
+    }
 }

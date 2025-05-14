@@ -27,15 +27,6 @@
     <Filter Include="Play">
       <UniqueIdentifier>{32b77251-ab6d-408f-a1d3-84605f894f46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External">
-      <UniqueIdentifier>{8b3aa729-242e-4b5f-9e7a-63f20f1b0386}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External\Imgui">
-      <UniqueIdentifier>{5a523bfc-4509-4580-83ca-036b701713c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External\Backends">
-      <UniqueIdentifier>{249f5462-ffb1-488e-a159-e206e695602b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Enemy">
       <UniqueIdentifier>{e385d94a-587c-44ef-a668-5660c72b4479}</UniqueIdentifier>
     </Filter>

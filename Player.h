@@ -15,9 +15,10 @@ private:
 	int hPlayerModel_;
 	int hPlayerSwimmingModel_;
 	int hPlayerFloatingModel_;
-
-	const float playerMoveSpeed_; // Playerの移動速度
 	
+	const float playerMoveSpeed_; // Playerの移動速度
+	int hp_;
+
 	PLAYER_ID playerState_;
 	
 	// 回転関係
@@ -36,13 +37,18 @@ private:
 	const float cameraMinDistance_; // ズームの最小距離
 	const float cameraMaxDistance_; // ズームの最大距離
 	const float cameraRotateSpeed_; // カメラの回転速度
+
 public:
-	Player(GameObject* parent);
+	Player(GameObject* parent);	
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;
 	void Release() override;
 	
+	int GetHp(){ return hp_; }
+	void SetHp(int _hp) { hp_ = _hp; }
+	
+	void OnCollision(GameObject* pTarget) override;
 	// PlayerのポジションをEnemyでとってくるために使用
 	DirectX::XMFLOAT3& GetPosition() { return transform_.position_; }
 	

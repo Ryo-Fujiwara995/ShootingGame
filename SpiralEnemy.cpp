@@ -1,7 +1,6 @@
 #include "SpiralEnemy.h"
 #include "Engine/Model.h"
 #include "Engine/Time.h"
-#include "Engine/SphereCollider.h"
 SpiralEnemy::SpiralEnemy(GameObject* parent) :GameObject(parent, "SpiralEnemy"), hSpiralEnemyDefaultModel_(-1)
 {
 }
@@ -10,6 +9,9 @@ void SpiralEnemy::Initialize()
 {
     hSpiralEnemyDefaultModel_ = Model::Load("Models\\Enemy\\EnemyDefault.fbx");
     assert(hSpiralEnemyDefaultModel_ >= INVALID_MODEL_HANDLE);
+
+    SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);
+    AddCollider(collision);
 
     if (!player_) return;
 
@@ -35,9 +37,6 @@ void SpiralEnemy::Update()
     float deltaTime = Time::GetDeltaTime();
     const XMFLOAT3& playerPos = player_->GetPosition();
 
-    SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.2f);
-    AddCollider(collision);
-
     // —†ùˆÚ“®
     angle_ += angularSpeed_ * deltaTime;
     radius_ -= radialSpeed_ * deltaTime;
@@ -62,7 +61,7 @@ void SpiralEnemy::Update()
             timeSinceEntered_ += deltaTime;
             if (timeSinceEntered_ >= disappearAfter) {
                 //KillMe();
-
+				OnCollision(player_); // ƒvƒŒƒCƒ„[‚ÉÕ“Ë‚µ‚½‚ç©•ª‚ğíœ
             }
         }
     }
@@ -74,7 +73,7 @@ void SpiralEnemy::Draw()
 	Model::Draw(hSpiralEnemyDefaultModel_);
     
 }
-
 void SpiralEnemy::Release()
 {
 }
+
