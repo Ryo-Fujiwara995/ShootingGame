@@ -19,6 +19,12 @@ private:
 
 	const float proximityRadius = 5.0f; // プレイヤーとの接触範囲
 	const float disappearAfter = 2.0f;  // プレイヤー範囲に入ってからの消滅時間
+
+	float verticalAmplitude_ = 1.0f;     // 上下の振れ幅
+	float verticalFrequency_ = 2.0f;     // 上下の速さ（周期）
+	float verticalPhase_ = 0.0f;         // 位相（初期値）
+
+	XMFLOAT3 targetPos_{}; // ロックオン位置
 public:
 	Player* player_ = nullptr;
 	SpiralEnemy(GameObject* parent);
