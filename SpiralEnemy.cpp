@@ -89,7 +89,6 @@ void SpiralEnemy::Draw()
 {
 	Model::SetTransform(hSpiralEnemyDefaultModel_, transform_);
 	Model::Draw(hSpiralEnemyDefaultModel_);
-    
 }
 void SpiralEnemy::Release()
 {

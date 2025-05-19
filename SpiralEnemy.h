@@ -12,7 +12,7 @@ private:
 	float angle_ = 0.0f;
 	float angularSpeed_ = 1.5f;
 	float radius_ = 30.0f;
-	float radialSpeed_ = 5.0f;
+	float radialSpeed_ = 5.0f;// drioai 
 
 	bool enteredProximity_ = false; // プレイヤー範囲に入ったか
 	float timeSinceEntered_ = 0.0f; // プレイヤー範囲に入ってからの時間

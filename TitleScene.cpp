@@ -14,7 +14,7 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	if (Input::IsKey(DIK_A)) {
+	if (Input::IsKey(XINPUT_GAMEPAD_A) || Input::IsKey(DIK_A)) {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_PLAY);
 	}// XBoxコントローラを使っています。LTボタンと、 Rtボタンを使いたいです。まずは、コンソールで確認したいです

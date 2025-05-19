@@ -7,7 +7,7 @@ private:
 	int hPict_;
 
 	float enemySpawnTimer_ = 0.0f;// ¶¬ŠÔŠuƒ^ƒCƒ}[
-	float enemySpawnInterval_ = 5.0f;// 5•b‚²‚Æ‚É“G‚ğ¶¬
+	float enemySpawnInterval_ = 2.0f;// 5•b‚²‚Æ‚É“G‚ğ¶¬
 	Player* player_ = nullptr;
 public:
 	PlayScene(GameObject* parent);

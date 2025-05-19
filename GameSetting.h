@@ -1,3 +1,5 @@
+#pragma once
+#include "Engine/CsvReader.h"
 //-------------------------------------
 // PlayerÝ’è
 //-------------------------------------
@@ -37,4 +39,3 @@
 //-------------------------------------
 #define INVALID_MODEL_HANDLE 0 // assert(hModel_ >= 0)ƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý‚ª¬Œ÷‚µ‚Ä‚¢‚é‚©‚ð”»’è‚·‚é‚½‚ß‚ÌŠî€’l
 #define FLOAT_ZERO_THRESHOLD 0.0001f // ‚µ‚«‚¢’l
-
