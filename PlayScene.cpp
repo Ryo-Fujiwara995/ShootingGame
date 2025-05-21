@@ -4,6 +4,7 @@
 #include "StraightLineEnemy.h"
 #include "Engine/Image.h"
 #include "GameSetting.h"
+#include "HpBar.h"
 
 #include "Engine/VFX.h"
 #include "Engine/SceneManager.h"
@@ -17,10 +18,12 @@ PlayScene::PlayScene(GameObject* parent):GameObject(parent),hPict_(-1)
 }
 void PlayScene::Initialize()
 {	
+	Instantiate<HpBar>(this);
 	// îwåi
-	hPict_ = Image::Load("Images\\space.png");
+	hPict_ = Image::Load("Images\\TitleBack.png");
 	//Instantiate<SpaceShuttle>(this);
 	player_ = Instantiate<Player>(this);
+
 	
 }
 

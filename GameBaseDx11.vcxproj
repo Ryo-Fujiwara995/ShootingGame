@@ -168,6 +168,7 @@
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameSetting.h" />
+    <ClCompile Include="HpBar.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="SpaceShuttle.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
     <ClInclude Include="GameOverScene.h" />
+    <ClInclude Include="HpBar.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="SpaceShuttle.h" />

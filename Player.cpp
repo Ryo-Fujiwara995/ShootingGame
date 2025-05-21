@@ -35,18 +35,9 @@ void Player::Initialize()
 
 void Player::Update()
 {
-    //// --- プレイヤー移動（左スティック） ---
-    //XMFLOAT3 stickL = Input::GetPadStickL();
-    //if (fabs(stickL.x) > Input::StickDeadZone || fabs(stickL.y) > Input::StickDeadZone) {
-    //    
-    //    XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
-    //    XMVECTOR localMove = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f);
-    //    XMVECTOR worldMove = XMVector3Transform(localMove, rot);
-    //    worldMove = XMVectorScale(worldMove, playerMoveSpeed_);
-    //    XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-    //    pos = XMVectorAdd(pos, worldMove);
-    //    XMStoreFloat3(&transform_.position_, pos);
-    //}
+    //-------------------------
+    // controller input
+    //-------------------------
     // --- プレイヤー移動（左スティック） ---
     XMFLOAT3 stick = Input::GetPadStickL(); // 左スティック入力（x:左右, y:前後）
 
@@ -130,25 +121,8 @@ void Player::Update()
 		cameraDistance_ = initCameraDistance_;
 	}
     //-------------------------
-	// keyboard input for player
+	// keyboard input
     //-------------------------
-    // --- キーボード移動処理（左右） ---
-    //if (Input::IsKey(DIK_A) || Input::IsKey(DIK_D))
-    //{
-    //    // Aキー：-1、Dキー：+1
-    //    float moveDir = 0.0f;
-    //    if (Input::IsKey(DIK_A)) moveDir -= 1.0f;
-    //    if (Input::IsKey(DIK_D)) moveDir += 1.0f;
-
-    //     //カメラのY軸方向に対して直角方向に移動（左右方向）
-    //    XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
-    //    XMVECTOR rightVec = XMVector3TransformNormal(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rot); // ワールドの右方向
-
-    //    XMVECTOR moveVec = XMVectorScale(rightVec, moveDir * playerMoveSpeed_);
-    //    XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-    //    pos = XMVectorAdd(pos, moveVec);
-    //    XMStoreFloat3(&transform_.position_, pos);
-    //}
     XMVECTOR moveVec = XMVectorZero();
 
     // キーボード入力から移動ベクトル作成（Z軸前提）
@@ -183,6 +157,22 @@ void Player::Update()
 
         transform_.rotate_.y = XMConvertToDegrees(currentAngle);
     }
+    //矢印キーによるカメラ操作
+    const float cameraRotateSpeed = XMConvertToRadians(1.5f); // 1.5度/フレーム
+
+    if (Input::IsKey(DIK_LEFT)) {
+        cameraYaw_ -= cameraRotateSpeed;
+    }
+    if (Input::IsKey(DIK_RIGHT)) {
+        cameraYaw_ += cameraRotateSpeed;
+    }
+    if (Input::IsKey(DIK_UP)) {
+        cameraPitch_ -= cameraRotateSpeed;
+    }
+    if (Input::IsKey(DIK_DOWN)) {
+        cameraPitch_ += cameraRotateSpeed;
+    }
+
 }
 
 void Player::Draw()
@@ -199,11 +189,12 @@ void Player::OnCollision(GameObject* pTarget)
 {
 	if ((pTarget->GetObjectName() == "SpiralEnemy") || (pTarget->GetObjectName() == "StraightLineEnemy"))
 	{
-        //当たった時の処理
-        hp_ = hp_ - 1;
-		if (hp_ <= 0)
-		{
-			KillMe();//自分を削除
-		}
+        if (hp_ > 0) {
+            hp_ -= 1;
+        }
+
+        if (hp_ <= 0) {
+            KillMe();
+        }
 	}
 }
