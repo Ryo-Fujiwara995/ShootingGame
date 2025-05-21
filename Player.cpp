@@ -133,51 +133,62 @@ void Player::Update()
 	// keyboard input for player
     //-------------------------
     // --- キーボード移動処理（左右） ---
-    if (Input::IsKey(DIK_A) || Input::IsKey(DIK_D))
+    //if (Input::IsKey(DIK_A) || Input::IsKey(DIK_D))
+    //{
+    //    // Aキー：-1、Dキー：+1
+    //    float moveDir = 0.0f;
+    //    if (Input::IsKey(DIK_A)) moveDir -= 1.0f;
+    //    if (Input::IsKey(DIK_D)) moveDir += 1.0f;
+
+    //     //カメラのY軸方向に対して直角方向に移動（左右方向）
+    //    XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
+    //    XMVECTOR rightVec = XMVector3TransformNormal(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rot); // ワールドの右方向
+
+    //    XMVECTOR moveVec = XMVectorScale(rightVec, moveDir * playerMoveSpeed_);
+    //    XMVECTOR pos = XMLoadFloat3(&transform_.position_);
+    //    pos = XMVectorAdd(pos, moveVec);
+    //    XMStoreFloat3(&transform_.position_, pos);
+    //}
+    XMVECTOR moveVec = XMVectorZero();
+
+    // キーボード入力から移動ベクトル作成（Z軸前提）
+    if (Input::IsKey(DIK_W)) moveVec = XMVectorAdd(moveVec, XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
+    if (Input::IsKey(DIK_S)) moveVec = XMVectorAdd(moveVec, XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f));
+    if (Input::IsKey(DIK_A)) moveVec = XMVectorAdd(moveVec, XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f));
+    if (Input::IsKey(DIK_D)) moveVec = XMVectorAdd(moveVec, XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f));
+
+    // 移動ベクトルの長さが0でなければ処理
+    if (!XMVector3Equal(moveVec, XMVectorZero()))
     {
-        // Aキー：-1、Dキー：+1
-        float moveDir = 0.0f;
-        if (Input::IsKey(DIK_A)) moveDir -= 1.0f;
-        if (Input::IsKey(DIK_D)) moveDir += 1.0f;
-
-         //カメラのY軸方向に対して直角方向に移動（左右方向）
-        XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
-        XMVECTOR rightVec = XMVector3TransformNormal(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rot); // ワールドの右方向
-
-        XMVECTOR moveVec = XMVectorScale(rightVec, moveDir * playerMoveSpeed_);
+        // --- 移動 ---
+        moveVec = XMVector3Normalize(moveVec);
+        const float moveSpeed = 0.1f;
         XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-        pos = XMVectorAdd(pos, moveVec);
+        pos = XMVectorAdd(pos, XMVectorScale(moveVec, moveSpeed));
         XMStoreFloat3(&transform_.position_, pos);
-    }
 
+        // --- 旋回 ---
+        XMFLOAT3 moveDir;
+        XMStoreFloat3(&moveDir, moveVec);
+        float targetAngle = atan2f(moveDir.x, moveDir.z); // Z前提
+        float currentAngle = XMConvertToRadians(transform_.rotate_.y);
+
+        float delta = targetAngle - currentAngle;
+        while (delta > XM_PI)  delta -= XM_2PI;
+        while (delta < -XM_PI) delta += XM_2PI;
+
+        const float rotateSpeed = XMConvertToRadians(5.0f); // 5度/フレーム
+        delta = std::clamp(delta, -rotateSpeed, rotateSpeed);
+        currentAngle += delta;
+
+        transform_.rotate_.y = XMConvertToDegrees(currentAngle);
+    }
 }
 
 void Player::Draw()
 {
-	// 初期化したままだとそのままなので、if(!(playerState_ = PLAYER_ID_DEFAULT) PLAYER_ID_DEFAULT)は、なし
-	//switch (playerState_)
-	//{
-	//case PLAYER_ID_DEFAULT:		// 0 - 180 fps -> anim なし？？
-		Model::SetTransform(hPlayerModel_, transform_);
-		// Model::SetAnimFrame(hPlayerModel_, 0, 180, 1.0f);
-		Model::Draw(hPlayerModel_);
-	//	break;
-
-	//case PLAYER_ID_SWIM:	// 0 - 136 fps // 0 - 271 fps
-	//	Model::SetTransform(hPlayerSwimmingModel_, transform_);
- //       Model::SetAnimFrame(hPlayerSwimmingModel_, 0, 136, 1.0f);
-	//	Model::Draw(hPlayerSwimmingModel_);
-	//	break;
-
-	//case PLAYER_ID_FLOAT:	// 0 - 40 fps
-	//	Model::SetTransform(hPlayerFloatingModel_, transform_);
-	//	// Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0f);
-	//    Model::Draw(hPlayerFloatingModel_);
-
-	//case PLAYER_ID_MAX:
-	//	break;
-	//}
-    
+	Model::SetTransform(hPlayerModel_, transform_);
+	Model::Draw(hPlayerModel_);
 }
 
 void Player::Release()
