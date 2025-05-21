@@ -16,6 +16,9 @@ void SpaceShuttle::Update()
 
 void SpaceShuttle::Draw()
 {
+	transform_.scale_ = XMFLOAT3(0.3f, 0.3f, 0.3f);
+	transform_.rotate_.x = 90.0f;
+	transform_.position_ = XMFLOAT3(0.0f, 0.3f, -0.8f);
 	Model::SetTransform(hSpaceShuttleModel_, transform_);
 	Model::Draw(hSpaceShuttleModel_);
 }

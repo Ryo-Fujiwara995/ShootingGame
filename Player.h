@@ -38,6 +38,7 @@ private:
 	const float cameraMaxDistance_; // ズームの最大距離
 	const float cameraRotateSpeed_; // カメラの回転速度
 
+	float rotationSpeed_ = 5.0f; // ラジアン/秒（例えば5.0fなら1秒で約286度回転）
 public:
 	Player(GameObject* parent);	
 	void Initialize() override;

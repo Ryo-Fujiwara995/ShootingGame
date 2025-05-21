@@ -19,7 +19,7 @@ void PlayScene::Initialize()
 {	
 	// îwåi
 	hPict_ = Image::Load("Images\\space.png");
-	Instantiate<SpaceShuttle>(this);
+	//Instantiate<SpaceShuttle>(this);
 	player_ = Instantiate<Player>(this);
 	
 }

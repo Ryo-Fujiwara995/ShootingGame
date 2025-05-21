@@ -1,33 +1,29 @@
 #include "Player.h"
+#include "SpaceShuttle.h"
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "GameSetting.h"
 #include "Engine/CsvReader.h"
 #include "Engine/Image.h"
+#include "Engine/Time.h"
 #include <algorithm>
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
-			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),playerMoveSpeed_(0.2f),
+			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),playerMoveSpeed_(0.2f),hp_(10),
 			playerState_(), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f),
 	        initCameraDistance_(10.0f), cameraZoomSpeed_(0.2f),
             isRotateRight_(), originalRotateRight_(), isRotateLeft_(), originalRotateLeft_(),
             cameraMinDistance_(5.0f), cameraMaxDistance_(20.0f), cameraRotateSpeed_(0.05f)
 {
+    
+
 }
 
 void Player::Initialize()
 {
-
-	hPlayerModel_ = Model::Load("Models\\Player\\PlayerDefault.fbx");
+    Instantiate<SpaceShuttle>(this);
+	hPlayerModel_ = Model::Load("Models\\Player\\PlayerSitting.fbx");
 	assert(hPlayerModel_ >= INVALID_MODEL_HANDLE);
-
-	hPlayerSwimmingModel_ = Model::Load("Models\\Player\\PlayerSwimming.fbx");
-	//Model::SetAnimFrame(hPlayerSwimmingModel_, 0, 136, 1.0);
-	assert(hPlayerSwimmingModel_ >= INVALID_MODEL_HANDLE);
-
-	hPlayerFloatingModel_ = Model::Load("Models\\Player\\PlayerFloating.fbx");
-	//Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0);
-	assert(hPlayerFloatingModel_ >= INVALID_MODEL_HANDLE);
 
     SphereCollider* playerCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);
     AddCollider(playerCollider);
@@ -39,23 +35,55 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	if (!(playerState_ = PLAYER_ID_DEFAULT))
-		playerState_ = PLAYER_ID_DEFAULT; // 初期状態に戻す
-
-
-
+    //// --- プレイヤー移動（左スティック） ---
+    //XMFLOAT3 stickL = Input::GetPadStickL();
+    //if (fabs(stickL.x) > Input::StickDeadZone || fabs(stickL.y) > Input::StickDeadZone) {
+    //    
+    //    XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
+    //    XMVECTOR localMove = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f);
+    //    XMVECTOR worldMove = XMVector3Transform(localMove, rot);
+    //    worldMove = XMVectorScale(worldMove, playerMoveSpeed_);
+    //    XMVECTOR pos = XMLoadFloat3(&transform_.position_);
+    //    pos = XMVectorAdd(pos, worldMove);
+    //    XMStoreFloat3(&transform_.position_, pos);
+    //}
     // --- プレイヤー移動（左スティック） ---
-    XMFLOAT3 stickL = Input::GetPadStickL();
-    if (fabs(stickL.x) > Input::StickDeadZone || fabs(stickL.y) > Input::StickDeadZone) {
-        
-        XMMATRIX rot = XMMatrixRotationY(cameraYaw_);
-        XMVECTOR localMove = XMVectorSet(stickL.x, 0.0f, stickL.y, 0.0f);
-        XMVECTOR worldMove = XMVector3Transform(localMove, rot);
-        worldMove = XMVectorScale(worldMove, playerMoveSpeed_);
+    XMFLOAT3 stick = Input::GetPadStickL(); // 左スティック入力（x:左右, y:前後）
+
+    // 入力が有効なときだけ処理
+    if (fabs(stick.x) > Input::StickDeadZone || fabs(stick.y) > Input::StickDeadZone) {
+
+        // --- 移動処理 ---
+        const float moveSpeed = 0.1f;
+        XMVECTOR moveVec = XMVectorSet(stick.x, 0.0f, stick.y, 0.0f);
+        moveVec = XMVector3Normalize(moveVec); // 斜めを正規化
+        moveVec = XMVectorScale(moveVec, moveSpeed);
+
         XMVECTOR pos = XMLoadFloat3(&transform_.position_);
-        pos = XMVectorAdd(pos, worldMove);
+        pos = XMVectorAdd(pos, moveVec);
         XMStoreFloat3(&transform_.position_, pos);
+
+        // --- 向き（Y軸）をスティック方向に合わせて旋回 ---
+        XMFLOAT3 moveDir;
+        XMStoreFloat3(&moveDir, moveVec);
+
+        float targetAngle = atan2f(moveDir.x, moveDir.z); // Z前提で前向き
+        float currentAngle = XMConvertToRadians(transform_.rotate_.y);
+
+        // 差分を [-π, π] に補正
+        float delta = targetAngle - currentAngle;
+        while (delta > XM_PI)  delta -= XM_2PI;
+        while (delta < -XM_PI) delta += XM_2PI;
+
+        // 旋回速度を制限（1フレームで最大5度回転）
+        const float rotateSpeed = XMConvertToRadians(5.0f); // ≒5度
+        delta = std::clamp(delta, -rotateSpeed, rotateSpeed);
+        currentAngle += delta;
+
+        // Y軸回転更新
+        transform_.rotate_.y = XMConvertToDegrees(currentAngle);
     }
+
 
     // --- カメラ制御（右スティック） ---
     XMFLOAT3 stickR = Input::GetPadStickR(Input::PLAYER_ONE_PAD_ID);
@@ -127,28 +155,28 @@ void Player::Update()
 void Player::Draw()
 {
 	// 初期化したままだとそのままなので、if(!(playerState_ = PLAYER_ID_DEFAULT) PLAYER_ID_DEFAULT)は、なし
-	switch (playerState_)
-	{
-	case PLAYER_ID_DEFAULT:		// 0 - 180 fps -> anim なし？？
+	//switch (playerState_)
+	//{
+	//case PLAYER_ID_DEFAULT:		// 0 - 180 fps -> anim なし？？
 		Model::SetTransform(hPlayerModel_, transform_);
 		// Model::SetAnimFrame(hPlayerModel_, 0, 180, 1.0f);
 		Model::Draw(hPlayerModel_);
-		break;
+	//	break;
 
-	case PLAYER_ID_SWIM:	// 0 - 136 fps // 0 - 271 fps
-		Model::SetTransform(hPlayerSwimmingModel_, transform_);
-        Model::SetAnimFrame(hPlayerSwimmingModel_, 0, 136, 1.0f);
-		Model::Draw(hPlayerSwimmingModel_);
-		break;
+	//case PLAYER_ID_SWIM:	// 0 - 136 fps // 0 - 271 fps
+	//	Model::SetTransform(hPlayerSwimmingModel_, transform_);
+ //       Model::SetAnimFrame(hPlayerSwimmingModel_, 0, 136, 1.0f);
+	//	Model::Draw(hPlayerSwimmingModel_);
+	//	break;
 
-	case PLAYER_ID_FLOAT:	// 0 - 40 fps
-		Model::SetTransform(hPlayerFloatingModel_, transform_);
-		// Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0f);
-	    Model::Draw(hPlayerFloatingModel_);
+	//case PLAYER_ID_FLOAT:	// 0 - 40 fps
+	//	Model::SetTransform(hPlayerFloatingModel_, transform_);
+	//	// Model::SetAnimFrame(hPlayerFloatingModel_, 0, 40, 1.0f);
+	//    Model::Draw(hPlayerFloatingModel_);
 
-	case PLAYER_ID_MAX:
-		break;
-	}
+	//case PLAYER_ID_MAX:
+	//	break;
+	//}
     
 }
 
@@ -158,23 +186,13 @@ void Player::Release()
 
 void Player::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "SpiralEnemy")
+	if ((pTarget->GetObjectName() == "SpiralEnemy") || (pTarget->GetObjectName() == "StraightLineEnemy"))
 	{
-		//hp_ -= 1;
-		//if (hp_ <= 0)
-		//{
-		//	//KillMe();
-		//}
-        KillMe();
+        //当たった時の処理
+        hp_ = hp_ - 1;
+		if (hp_ <= 0)
+		{
+			KillMe();//自分を削除
+		}
 	}
-
-    if (pTarget->GetObjectName() == "StraightLineEnemy")
-    {
-        //hp_ -= 1;
-        //if (hp_ <= 0)
-        //{
-        //    //KillMe();
-        //}
-        KillMe();
-    }
 }
