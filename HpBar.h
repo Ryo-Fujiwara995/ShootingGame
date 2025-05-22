@@ -1,14 +1,17 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include "Player.h"
-class HpBar :
-    public GameObject
+#include <string>
+
+class HpBar : public GameObject
 {
 private:
-	Player* player_ = nullptr;            // 参照先
-	int hBackGroundHandle_;      // 背景画像ハンドル（黒や灰色）
-	int hBarHandle_;             // ゲージ本体（赤など）
-	float hpRate_;              // 表示用のHP割合（0.0～1.0）
+	int hHpNumPict_;
+	std::string hpStr_; // 例："005"
+
+	// --- 文字描画用定数 ---
+	static constexpr int CHAR_WIDTH = 16;
+	static constexpr int CHAR_HEIGHT = 32;
+	static constexpr int CHAR_START_CODE = 33; // ASCIIコードの開始位置
 public:
 	HpBar(GameObject* parent);
 	void Initialize() override;
@@ -16,4 +19,3 @@ public:
 	void Draw() override;
 	void Release() override;
 };
-

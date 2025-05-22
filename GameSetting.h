@@ -38,4 +38,5 @@
 // その他
 //-------------------------------------
 #define INVALID_MODEL_HANDLE 0 // assert(hModel_ >= 0)モデルの読み込みが成功しているかを判定するための基準値
+#define INVALID_IMAGE_HANDLE 0 // assert(hPict_ >= 0)画像の読み込みが成功しているかを判定するための基準値
 #define FLOAT_ZERO_THRESHOLD 0.0001f // しきい値

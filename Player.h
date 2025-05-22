@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include <string>
 enum PLAYER_ID {
 	PLAYER_ID_DEFAULT = 0,	// ‰Šúó‘Ô
 	PLAYER_ID_SWIM = 1,	// ‰j‚®
@@ -46,7 +47,7 @@ public:
 	void Draw() override;
 	void Release() override;
 	
-	int GetHp(){ return hp_; }
+	int GetHp()const{ return hp_; }
 	void SetHp(int _hp) { hp_ = _hp; }
 	
 	void OnCollision(GameObject* pTarget) override;
