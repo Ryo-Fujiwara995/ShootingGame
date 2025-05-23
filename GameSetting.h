@@ -5,9 +5,11 @@
 //-------------------------------------
 //#define PLAYER_SPEED 0.1f // Playerの移動速度
 //#define PLAYER_ROTATE_SPEED 0.05f // Playerの回転速度
-#define PLAYER_HP_NUMBER_DIGITS_MIN 0 // PlayerのHPの桁数の最小桁数
-#define PLAYER_HP_NUMBER_DIGITS_MAX 3 // PlayerのHPの桁数の最大桁数
-
+#define PLAYER_HP_NUMBER_DIGITS_MIN_ARRAY 0 // PlayerのHPの桁数の最小桁数の配列
+#define PLAYER_HP_NUMBER_DIGITS_MAX_ARRAY 3 // PlayerのHPの桁数の最大桁数の配列
+#define PLAYER_HP_NUMBER_DIGITS_MIN 1 // PlayerのHPの桁数の最小桁数
+#define PLAYER_HP_MIN 0   // PlayerのHPの最小値
+#define PLAYER_HP_MAX 999 // PlayerのHPの最大値
 //-------------------------------------
 // Enemy関連
 //-------------------------------------
