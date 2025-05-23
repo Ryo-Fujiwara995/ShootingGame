@@ -5,6 +5,9 @@
 //-------------------------------------
 //#define PLAYER_SPEED 0.1f // Playerの移動速度
 //#define PLAYER_ROTATE_SPEED 0.05f // Playerの回転速度
+#define PLAYER_HP_NUMBER_DIGITS_MIN 0 // PlayerのHPの桁数の最小桁数
+#define PLAYER_HP_NUMBER_DIGITS_MAX 3 // PlayerのHPの桁数の最大桁数
+
 //-------------------------------------
 // Enemy関連
 //-------------------------------------
@@ -33,6 +36,8 @@
 #define STRAIGHT_LINE_ENEMY_STOP_RADIUS 0.5f  // 到達半径速度
 #define STRAIGHT_LINE_ENEMY_MINIMUM_VALUE 20.0f// ランダムの下限値。半径が最低でもこれになる
 #define STRAIGHT_LINE_ENEMY_MAXIMUM_VALUE 15.0f// ランダムの幅　rand() の結果を0～1に正規化した上で、この幅だけプラスされる
+
+
 
 //-------------------------------------
 // その他

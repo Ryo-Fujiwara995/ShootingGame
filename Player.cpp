@@ -11,8 +11,8 @@
 #include <algorithm>
 
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
-			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),playerMoveSpeed_(0.2f),hp_(111),
-			playerState_(), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f),
+			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),playerMoveSpeed_(0.2f),
+            hp_(999),playerState_(), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f),
 	        initCameraDistance_(10.0f), cameraZoomSpeed_(0.2f),
             isRotateRight_(), originalRotateRight_(), isRotateLeft_(), originalRotateLeft_(),
             cameraMinDistance_(5.0f), cameraMaxDistance_(20.0f), cameraRotateSpeed_(0.05f)

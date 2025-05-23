@@ -5,7 +5,13 @@
 class HpBar : public GameObject
 {
 private:
-	int hHpNumPict_;
+	/// <summary>
+	/// HP表示を行うための画像ハンドル
+	/// hHpNumPict_[0] : 100の位
+	/// hHpNumPict_[1] :  10の位
+	/// hHpNumPict_[2] :   1の位
+	/// </summary>
+	int hHpNumPict_[3];
 	std::string hpStr_; // 例："005"
 
 	// --- 文字描画用定数 ---
