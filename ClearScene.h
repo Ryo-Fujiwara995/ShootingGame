@@ -3,6 +3,8 @@
 
 class ClearScene : public GameObject
 {
+private:
+	int hClearPict_;
 public:
 	ClearScene(GameObject* parent);
 	void Initialize() override;

@@ -2,23 +2,22 @@
 #include "SpaceShuttle.h"
 #include "HpBar.h"
 #include "Engine/Model.h"
+#include "Engine/Image.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "GameSetting.h"
-#include "Engine/CsvReader.h"
-#include "Engine/Image.h"
 #include "Engine/Time.h"
+#include "Engine/SceneManager.h"
+#include "Engine/Audio.h"
 #include <algorithm>
 
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
-			hPlayerModel_(-1),hPlayerSwimmingModel_(-1),hPlayerFloatingModel_(-1),playerMoveSpeed_(0.2f),
-            hp_(999),playerState_(), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f),
+			hPlayerModel_(INVALID_OBJECT_HANDLE),hPlayerSwimmingModel_(INVALID_OBJECT_HANDLE),hPlayerFloatingModel_(INVALID_OBJECT_HANDLE),playerMoveSpeed_(0.2f),
+            hp_(5), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f),
 	        initCameraDistance_(10.0f), cameraZoomSpeed_(0.2f),
             isRotateRight_(), originalRotateRight_(), isRotateLeft_(), originalRotateLeft_(),
             cameraMinDistance_(5.0f), cameraMaxDistance_(20.0f), cameraRotateSpeed_(0.05f)
 {
-    
-
 }
 
 void Player::Initialize()
@@ -28,12 +27,11 @@ void Player::Initialize()
     hPlayerModel_ = Model::Load("Models\\Player\\PlayerSitting.fbx");
 	assert(hPlayerModel_ >= INVALID_MODEL_HANDLE);
 
-    SphereCollider* playerCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);
-    AddCollider(playerCollider);
+	hDamagePict_ = Image::Load("Images\\PlayScene\\Damage.png");
+    assert(hDamagePict_ >= INVALID_IMAGE_HANDLE);
 
-    // Csvファイルの読み込み
-    //CsvReader playerCsv;
-    //playerCsv.Load("Csv\\PlayerSetting.csv");
+    SphereCollider* playerCollider = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);//中心と半径
+    AddCollider(playerCollider);
 
     HpBar* hpBar = new HpBar(this);
     hpBar->Initialize();
@@ -55,7 +53,7 @@ void Player::Update()
 
             // --- 移動処理 ---
             const float moveSpeed = 0.1f;
-            XMVECTOR moveVec = XMVectorSet(stick.x, 0.0f, stick.y, 0.0f);
+            XMVECTOR moveVec = XMVectorSet(stick.x, 0, stick.y, 0);
             moveVec = XMVector3Normalize(moveVec); // 斜めを正規化
             moveVec = XMVectorScale(moveVec, moveSpeed);
 
@@ -98,7 +96,7 @@ void Player::Update()
         }
 
         // --- カメラ位置計算（回転 + 直線ズーム） ---
-        XMMATRIX rotMat = XMMatrixRotationRollPitchYaw(cameraPitch_, cameraYaw_, 0.0f);
+        XMMATRIX rotMat = XMMatrixRotationRollPitchYaw(cameraPitch_, cameraYaw_, 0);
         XMVECTOR forward = XMVectorSet(0, 0, 1, 0);
         XMVECTOR direction = XMVector3TransformNormal(forward, rotMat);
         direction = XMVector3Normalize(direction);
@@ -133,10 +131,10 @@ void Player::Update()
         XMVECTOR moveVec = XMVectorZero();
 
         // キーボード入力から移動ベクトル作成（Z軸前提）
-        if (Input::IsKey(DIK_W)) moveVec = XMVectorAdd(moveVec, XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
-        if (Input::IsKey(DIK_S)) moveVec = XMVectorAdd(moveVec, XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f));
-        if (Input::IsKey(DIK_A)) moveVec = XMVectorAdd(moveVec, XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f));
-        if (Input::IsKey(DIK_D)) moveVec = XMVectorAdd(moveVec, XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f));
+        if (Input::IsKey(DIK_W)) moveVec = XMVectorAdd(moveVec, XMVectorSet(0, 0,  1, 0));
+        if (Input::IsKey(DIK_S)) moveVec = XMVectorAdd(moveVec, XMVectorSet(0, 0, -1, 0));
+        if (Input::IsKey(DIK_A)) moveVec = XMVectorAdd(moveVec, XMVectorSet(-1, 0, 0, 0));
+        if (Input::IsKey(DIK_D)) moveVec = XMVectorAdd(moveVec, XMVectorSet( 1, 0, 0, 0));
 
         // 移動ベクトルの長さが0でなければ処理
         if (!XMVector3Equal(moveVec, XMVectorZero()))
@@ -165,7 +163,7 @@ void Player::Update()
             transform_.rotate_.y = XMConvertToDegrees(currentAngle);
         }
         //矢印キーによるカメラ操作
-        const float cameraRotateSpeed = XMConvertToRadians(1.5f); // 1.5度/フレーム
+        const float cameraRotateSpeed = XMConvertToRadians(2.0f); // 2度/フレーム
 
         if (Input::IsKey(DIK_LEFT)) {
             cameraYaw_ -= cameraRotateSpeed;
@@ -179,6 +177,29 @@ void Player::Update()
         if (Input::IsKey(DIK_DOWN)) {
             cameraPitch_ += cameraRotateSpeed;
         }
+
+        //カメラのリセット
+        if (Input::IsKeyDown(DIK_Z) || Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+            cameraYaw_ = initCameraYaw_;
+            cameraPitch_ = initCameraPitch_;
+            cameraDistance_ = initCameraDistance_;
+        }
+
+    }
+    //無敵関係
+    if (invincibleTimer_ > PLAYER_INIT_INVINCIBLE_TIMER_MIN) {
+        invincibleTimer_ -= Time::GetDeltaTime();
+        if (invincibleTimer_ < PLAYER_INIT_INVINCIBLE_TIMER_MIN) {
+            invincibleTimer_ = PLAYER_INIT_INVINCIBLE_TIMER_MIN;
+        }
+    }
+
+	//ダメージフラッシュ関係
+    if (isDamageFlashing_) {
+        damageFlashTimer_ += Time::GetDeltaTime();
+        if (damageFlashTimer_ >= damageFlashDuration_) {
+            isDamageFlashing_ = false;
+        }
     }
 }
 
@@ -186,6 +207,20 @@ void Player::Draw()
 {    
     Model::SetTransform(hPlayerModel_, transform_);
 	Model::Draw(hPlayerModel_);
+
+    if (isDamageFlashing_) {
+        float alpha = 1 - (damageFlashTimer_ / damageFlashDuration_);
+        int alphaValue = static_cast<int>(alpha * 255.0f);
+
+        //Transform fullscreen;
+        //fullscreen.position_ = { ZERO, ZERO, ZERO };
+
+        Image::SetTransform(hDamagePict_, transform_);
+        Image::SetAlpha(hDamagePict_, alpha);
+        Image::Draw(hDamagePict_);
+    }
+
+
 }
 
 void Player::Release()
@@ -194,16 +229,29 @@ void Player::Release()
 
 void Player::OnCollision(GameObject* pTarget)
 {
-	if ((pTarget->GetObjectName() == "SpiralEnemy") || (pTarget->GetObjectName() == "StraightLineEnemy"))
-	{
-        if (hp_ > 0) {
-            hp_ -= 1;
-            //しばらく無敵時間を設ける
+    if ((pTarget->GetObjectName() == "SpiralEnemy") || (pTarget->GetObjectName() == "StraightLineEnemy"))
+    {
+        // 無敵中はダメージを受けない
+        if (invincibleTimer_ > PLAYER_INIT_INVINCIBLE_TIMER_MIN) {
+            return;
         }
 
-        if (hp_ <= 0) {
-            KillMe();
-			//ゲームオーバー処理
+        // ダメージ処理
+        if (hp_ > PLAYER_HP_MIN) {
+            hp_ -= PLAYER_HP_DOWN;
+             // 赤点滅のダメージフラグを立てる
+            isDamageFlashing_ = true;
+            damageFlashTimer_ = 0.0f;
+            // 無敵タイマーを開始
+            invincibleTimer_ = invincibleTime_;
         }
-	}
+
+        if (hp_ <= PLAYER_HP_MIN) {// HP が0になったら、Playerを削除してGameOverSceneに移動
+            
+
+            KillMe();
+            SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+            pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
+        }
+    }
 }

@@ -3,7 +3,8 @@
 
 class TitleScene : public GameObject
 {
-	int hPict_; // ‰æ‘œ”Ô†
+	int hTitlePict_; // ‰æ‘œ”Ô†
+	int hTitleSound_;
 public:
 	TitleScene(GameObject* parent);
 	void Initialize() override;

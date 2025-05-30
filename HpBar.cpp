@@ -39,9 +39,9 @@ void HpBar::Draw()
 		char c = hpStr_[i];
 		int index = static_cast<int>(c) - CHAR_START_CODE;
 
-		if (index >= 0 && index < 94) {
-			int srcX = (index % 16) * CHAR_WIDTH;
-			int srcY = (index / 16) * CHAR_HEIGHT;
+		if (index >= CHAR_MIN_INDEX && index < CHAR_TOTAL_COUNT) {
+			int srcX = (index % CHAR_PER_ROW) * CHAR_WIDTH;
+			int srcY = (index / CHAR_PER_ROW) * CHAR_HEIGHT;
 
 			Transform drawTransform = transform_; // ← 基準位置をコピー
 			drawTransform.position_.x += i * CHAR_WIDTH; // ← 桁ごとに16pxずらす	

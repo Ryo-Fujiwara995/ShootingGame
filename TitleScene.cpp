@@ -1,29 +1,35 @@
 #include "TitleScene.h"
 #include "Engine/Image.h"
 #include "Engine/Input.h"
+#include "Engine/Audio.h"
 #include "Engine/SceneManager.h"
-TitleScene::TitleScene(GameObject* parent) : GameObject(parent, "TitleScene"), hPict_(-1)
+TitleScene::TitleScene(GameObject* parent) : GameObject(parent, "TitleScene"), hTitlePict_(-1)
 {
 }
 
 void TitleScene::Initialize()
 {
-	hPict_ = Image::Load("Images\\Title.png");
-	assert(hPict_ >= 0);
+	hTitlePict_ = Image::Load("Images\\TitleScene\\Title.png");
+	assert(hTitlePict_ >= 0);
+
+	hTitleSound_ = Audio::Load("Bgm\\TitleScene\\Title.wav");
+	assert(hTitleSound_ >= 0);
 }
 
 void TitleScene::Update()
 {
-	if (Input::IsKey(XINPUT_GAMEPAD_A) || Input::IsKey(DIK_A)) {
+	if (Input::IsKey(XINPUT_GAMEPAD_A) || Input::IsKey(DIK_RETURN)) {
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_PLAY);
-	}// XBoxコントローラを使っています。LTボタンと、 Rtボタンを使いたいです。まずは、コンソールで確認したいです
+	}
 }
 
 void TitleScene::Draw()
 {
-	Image::SetTransform(hPict_, transform_);
-	Image::Draw(hPict_);
+	Image::SetTransform(hTitlePict_, transform_);
+	Image::Draw(hTitlePict_);
+
+	Audio::Play(hTitleSound_);
 }
 
 void TitleScene::Release()

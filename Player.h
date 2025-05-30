@@ -1,17 +1,20 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include <string>
-enum PLAYER_ID {
-	PLAYER_ID_DEFAULT = 0,	// 初期状態
-	PLAYER_ID_SWIM = 1,	// 泳ぐ
-	PLAYER_ID_FLOAT,	// ふよふよ
-	PLAYER_ID_MAX
-};
+//enum PLAYER_ID {
+//	PLAYER_ID_DEFAULT = 0,	// 初期状態
+//	PLAYER_ID_SWIM = 1,	// 泳ぐ
+//	PLAYER_ID_FLOAT,	// ふよふよ
+//	PLAYER_ID_MAX
+//};
+
 class Player :
     public GameObject
 {
-
 private:
+	//画像関係
+	int hDamagePict_; // ダメージ時の赤い画面
+	
 	// モデル関係
 	int hPlayerModel_;
 	int hPlayerSwimmingModel_;
@@ -20,7 +23,14 @@ private:
 	const float playerMoveSpeed_; // Playerの移動速度
 	int hp_;
 
-	PLAYER_ID playerState_;
+	float invincibleTimer_ = 0.0f;      // 無敵タイマー
+	const float invincibleTime_ = 2.0f; // 無敵時間（秒）
+	
+	float damageFlashTimer_ = 0.0f;
+	const float damageFlashDuration_ = 0.5f; // 点滅時間（秒）
+	bool isDamageFlashing_ = false;
+
+	//PLAYER_ID playerState_;
 	
 	// 回転関係
 	bool isRotateRight_;
@@ -33,7 +43,9 @@ private:
 	float cameraYaw_; // 左右(Y軸周り)
 	float cameraPitch_; // 上下(X軸周り)
 	float cameraDistance_; // ズーム距離（初期値10）
-	const float initCameraDistance_;// カメラリセット用
+	const float initCameraYaw_ = 0.0f;     // 初期Yaw角
+	const float initCameraPitch_ = 0.0f;   // 初期Pitch角
+	const float initCameraDistance_; // 初期距離
 	const float cameraZoomSpeed_; // ズームスピード
 	const float cameraMinDistance_; // ズームの最小距離
 	const float cameraMaxDistance_; // ズームの最大距離
@@ -52,6 +64,5 @@ public:
 	
 	void OnCollision(GameObject* pTarget) override;
 	// PlayerのポジションをEnemyでとってくるために使用
-	DirectX::XMFLOAT3& GetPosition() { return transform_.position_; }
-	
+	XMFLOAT3& GetPosition() { return transform_.position_; }
 };

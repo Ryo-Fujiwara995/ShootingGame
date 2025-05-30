@@ -3,6 +3,8 @@
 
 class GameOverScene : public GameObject
 {
+private:
+	int hGameOverPict_;
 public:
 	GameOverScene(GameObject* parent);
 	void Initialize() override;
