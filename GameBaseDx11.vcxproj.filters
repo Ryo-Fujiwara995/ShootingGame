@@ -139,7 +139,9 @@
     <ClCompile Include="ClearScene.cpp">
       <Filter>Clear</Filter>
     </ClCompile>
-    <ClCompile Include="HpBar.cpp" />
+    <ClCompile Include="HpBar.cpp">
+      <Filter>Play</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -239,7 +241,9 @@
     <ClInclude Include="ClearScene.h">
       <Filter>Clear</Filter>
     </ClInclude>
-    <ClInclude Include="HpBar.h" />
+    <ClInclude Include="HpBar.h">
+      <Filter>Play</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
