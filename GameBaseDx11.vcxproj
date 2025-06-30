@@ -174,7 +174,6 @@
     <ClCompile Include="SpaceShuttle.cpp" />
     <ClCompile Include="SpiralEnemy.cpp" />
     <ClCompile Include="StraightLineEnemy.cpp" />
-    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -210,7 +209,6 @@
     <ClInclude Include="SpaceShuttle.h" />
     <ClInclude Include="SpiralEnemy.h" />
     <ClInclude Include="StraightLineEnemy.h" />
-    <ClInclude Include="TestScene.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
