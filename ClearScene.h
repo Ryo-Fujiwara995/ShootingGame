@@ -5,6 +5,7 @@ class ClearScene : public GameObject
 {
 private:
 	int hClearPict_;
+	int hClearSceneSound_;
 public:
 	ClearScene(GameObject* parent);
 	void Initialize() override;

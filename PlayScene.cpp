@@ -80,29 +80,29 @@ void PlayScene::Draw()
 	int remainTime = static_cast<int>(timeLimit_ - elapsedTime_);
 	if (remainTime < 0) remainTime = 0;
 
-	//// 残り時間を2桁文字列へ（例: "05"）
-	//std::ostringstream oss;
-	//oss << std::setw(2) << std::setfill('0') << remainTime;
-	//std::string timeStr = oss.str();  // 2文字 "00" ～ "60"
+	// 残り時間を2桁文字列へ（例: "05"）
+	std::ostringstream oss;
+	oss << std::setw(2) << std::setfill('0') << remainTime;
+	std::string timeStr = oss.str();  // 2文字 "00" ～ "60"
 
-	//// 1文字ずつ描画
-	//for (int i = 0; i < 2; ++i) {
-	//	char c = timeStr[i];
-	//	int index = static_cast<int>(c) - CHAR_START_CODE;
+	// 1文字ずつ描画
+	for (int i = 0; i < 2; i++) {
+		char c = timeStr[i];
+		int index = static_cast<int>(c) - CHAR_START_CODE;
 
-	//	if (index >= CHAR_MIN_INDEX && index < CHAR_TOTAL_COUNT) {
-	//		int srcX = (index % CHAR_PER_ROW) * CHAR_WIDTH;
-	//		int srcY = (index / CHAR_PER_ROW) * CHAR_HEIGHT;
+		if (index >= CHAR_MIN_INDEX && index < CHAR_TOTAL_COUNT) {
+			int srcX = (index % CHAR_PER_ROW) * CHAR_WIDTH;
+			int srcY = (index / CHAR_PER_ROW) * CHAR_HEIGHT;
 
-	//		Transform drawTransform = transform_;
-	//		drawTransform.position_.x += 20 + i * CHAR_WIDTH; // 表示開始位置 + 桁ずらし
-	//		drawTransform.position_.y += 20;
-	//		Image::SetTransform(hCountDownTimerPict_, drawTransform); Image::Draw(hCountDownTimerPict_);
-	//		Image::SetRect(hCountDownTimerPict_, srcX, srcY, CHAR_WIDTH, CHAR_HEIGHT);
-	//		Image::SetAlpha(hCountDownTimerPict_, 255); // 念のため追加
-	//		Image::ResetRect(hCountDownTimerPict_);
-	//	}
-	//}
+			Transform drawTransform = transform_;
+			drawTransform.position_.x += 20 + i * CHAR_WIDTH; // 表示開始位置 + 桁ずらし
+			drawTransform.position_.y += 20;
+			Image::SetTransform(hCountDownTimerPict_, drawTransform); Image::Draw(hCountDownTimerPict_);
+			Image::SetRect(hCountDownTimerPict_, srcX, srcY, CHAR_WIDTH, CHAR_HEIGHT);
+			Image::SetAlpha(hCountDownTimerPict_, 255); // 念のため追加
+			Image::ResetRect(hCountDownTimerPict_);
+		}
+	}
 }
 
 void PlayScene::Release()

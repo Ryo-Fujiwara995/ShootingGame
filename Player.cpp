@@ -119,7 +119,7 @@ void Player::Update()
         Camera::SetTarget(target);
 
         //--- カメラリセット ---
-        if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_THUMB)) {// Rスティック押し込み
+        if (Input::IsPadButtonDown(XINPUT_GAMEPAD_RIGHT_THUMB) || Input::IsKey(DIK_R)) {// Rスティック押し込み or Rキー
             // カメラ方向と距離をリセット
             cameraYaw_ = 0.0f;
             cameraPitch_ = 0.0f;

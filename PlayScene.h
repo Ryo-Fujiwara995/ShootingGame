@@ -8,16 +8,16 @@ private:
 	int hCountDownTimerPict_;
 	int hPlaySceneSound_;
 
-	float enemySpawnTimer_ = 0.0f;// 生成間隔タイマー
+	float enemySpawnTimer_    = 0.0f;// 生成間隔タイマー
 	float enemySpawnInterval_ = 2.0f;// 2秒ごとに敵を生成
 	Player* player_ = nullptr;
 
-	float timeLimit_ = 60.0f;      // 制限時間（秒）
+	float timeLimit_   = 60.0f;      // 制限時間（秒）
 	float elapsedTime_ = 0.0f;     // 経過時間
 
-	const int CHAR_WIDTH = 16;
-	const int CHAR_HEIGHT = 16;
-	const int CHAR_PER_ROW = 16;
+	const int CHAR_WIDTH      = 16;
+	const int CHAR_HEIGHT     = 16;
+	const int CHAR_PER_ROW    = 16;
 	const int CHAR_START_CODE = 32;
 
 public:

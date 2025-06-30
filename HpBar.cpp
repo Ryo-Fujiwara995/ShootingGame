@@ -31,6 +31,7 @@ void HpBar::Update()
 		oss << std::setw(PLAYER_HP_NUMBER_DIGITS_MIN) << std::setfill('0') << hp; // Œ…‚Ì0–„‚ß
 		hpStr_ = oss.str();
 	}
+
 }
 
 void HpBar::Draw()

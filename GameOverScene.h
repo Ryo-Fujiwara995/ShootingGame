@@ -5,6 +5,7 @@ class GameOverScene : public GameObject
 {
 private:
 	int hGameOverPict_;
+	int hGameOverSceneSound_;
 public:
 	GameOverScene(GameObject* parent);
 	void Initialize() override;
