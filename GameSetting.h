@@ -57,6 +57,9 @@
 #define INVALID_MODEL_HANDLE 0 // assert(hModel_ >= 0)モデルの読み込みが成功しているかを判定するための基準値
 #define INVALID_IMAGE_HANDLE 0 // assert(hPict_ >= 0)画像の読み込みが成功しているかを判定するための基準値
 #define INVALID_OBJECT_HANDLE -1 // 基準値画像やモデルの番号は０以上（０も含む）の値になるので-1
+#define WINDOW_WIDTH 1280 //ウィンドウの幅
+#define WINDOW_HEIGHT 720 //ウィンドウの高さ
+
 
 //-------------------------------------
 // マジックナンバーを防ぐための応急処置

@@ -1,8 +1,8 @@
 #include "TitleScene.h"
-#include "Engine/Image.h"
-#include "Engine/Input.h"
-#include "Engine/Audio.h"
-#include "Engine/SceneManager.h"
+#include "../../Engine/Image.h"
+#include "../../Engine/Input.h"
+#include "../../Engine/Audio.h"
+#include "../../Engine/SceneManager.h"
 TitleScene::TitleScene(GameObject* parent) : GameObject(parent, "TitleScene"), hTitlePict_(-1)
 {
 }

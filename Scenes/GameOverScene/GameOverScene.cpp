@@ -1,7 +1,7 @@
 #include "GameOverScene.h"
-#include "Engine/SceneManager.h"
-#include "Engine/Image.h"
-#include "Engine/Input.h"
+#include "../../Engine/SceneManager.h"
+#include "../../Engine/Image.h"
+#include "../../Engine/Input.h"
 GameOverScene::GameOverScene(GameObject* parent) : GameObject(parent, "TitleScene"), hGameOverPict_(-1)
 {
 }

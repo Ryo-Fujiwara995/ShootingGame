@@ -141,7 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\BillBoard.cpp" />
     <ClCompile Include="Engine\BoxCollider.cpp" />
@@ -166,19 +165,19 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
-    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameSetting.h" />
-    <ClCompile Include="HpBar.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayScene.cpp" />
-    <ClCompile Include="SpaceShuttle.cpp" />
-    <ClCompile Include="SpiralEnemy.cpp" />
-    <ClCompile Include="StraightLineEnemy.cpp" />
+    <ClCompile Include="Scenes\ClearScene\ClearScene.cpp" />
+    <ClCompile Include="Scenes\GameOverScene\GameOverScene.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\SpiralEnemy\SpiralEnemy.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Enemy\StraightLineEnemy\StraightLineEnemy.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Player\HpBar.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Player\Player.cpp" />
+    <ClCompile Include="Scenes\PlayScene\Player\SpaceShuttle.cpp" />
+    <ClCompile Include="Scenes\PlayScene\PlayScene.cpp" />
+    <ClCompile Include="Scenes\TitleScene\TitleScene.cpp" />
     <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ClearScene.h" />
     <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\BillBoard.h" />
     <ClInclude Include="Engine\BoxCollider.h" />
@@ -203,15 +202,16 @@
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
-    <ClInclude Include="GameOverScene.h" />
-    <ClInclude Include="HpBar.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayScene.h" />
-    <ClInclude Include="SpaceShuttle.h" />
-    <ClInclude Include="SpiralEnemy.h" />
-    <ClInclude Include="StraightLineEnemy.h" />
+    <ClInclude Include="Scenes\ClearScene\ClearScene.h" />
+    <ClInclude Include="Scenes\GameOverScene\GameOverScene.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\SpiralEnemy\SpiralEnemy.h" />
+    <ClInclude Include="Scenes\PlayScene\Enemy\StraightLineEnemy\StraightLineEnemy.h" />
+    <ClInclude Include="Scenes\PlayScene\Player\HpBar.h" />
+    <ClInclude Include="Scenes\PlayScene\Player\Player.h" />
+    <ClInclude Include="Scenes\PlayScene\Player\SpaceShuttle.h" />
+    <ClInclude Include="Scenes\PlayScene\PlayScene.h" />
+    <ClInclude Include="Scenes\TitleScene\TitleScene.h" />
     <ClInclude Include="TestScene.h" />
-    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

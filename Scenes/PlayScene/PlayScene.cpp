@@ -1,18 +1,18 @@
 #include "PlayScene.h"
-#include "SpaceShuttle.h"
-#include "SpiralEnemy.h"
-#include "StraightLineEnemy.h"
-#include "Engine/Image.h"
-#include "GameSetting.h"
+#include "Player/SpaceShuttle.h"
+#include "Enemy/SpiralEnemy/SpiralEnemy.h"
+#include "Enemy/StraightLineEnemy/StraightLineEnemy.h"
+#include "../../Engine/Image.h"
+#include "../../GameSetting.h"
 
-#include "Engine/VFX.h"
-#include "Engine/SceneManager.h"
-#include "Engine/Debug.h"
-#include "Engine/Input.h"
-#include "Engine/Time.h"
-#include "Engine/Audio.h"
+#include "../../Engine/VFX.h"
+#include "../../Engine/SceneManager.h"
+#include "../../Engine/Debug.h"
+#include "../../Engine/Input.h"
+#include "../../Engine/Time.h"
+#include "../../Engine/Audio.h"
 
-#include "TitleScene.h"
+#include "../TitleScene/TitleScene.h"
 #include <sstream>
 #include <iomanip>
 const int CHAR_WIDTH = 16;
@@ -64,6 +64,8 @@ void PlayScene::Update()
 			straightEnemy->player_ = player_;
 			straightEnemy->Initialize();
 		}
+		GameObject* pVFX = FindObject("VFX");
+		
 	}
 }
 
@@ -71,10 +73,13 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
+	//îwåi
 	Image::SetTransform(hPict_, transform_);
 	Image::Draw(hPict_);
 
+	//BGM
 	Audio::Play(hPlaySceneSound_);
+	
 	// ----------- É^ÉCÉ}Å[ï`âÊ -----------
 		// écÇËéûä‘ÇÃåvéZÅiç≈ëÂ60ïbÅj
 	int remainTime = static_cast<int>(timeLimit_ - elapsedTime_);

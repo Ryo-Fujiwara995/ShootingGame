@@ -1,12 +1,12 @@
 #pragma once
-#include "Engine/GameObject.h"
+#include "../../Engine/GameObject.h"
 
-class GameOverScene : public GameObject
+class ClearScene : public GameObject
 {
 private:
-	int hGameOverPict_;
+	int hClearPict_;
 public:
-	GameOverScene(GameObject* parent);
+	ClearScene(GameObject* parent);
 	void Initialize() override;
 	void Update() override;
 	void Draw() override;

@@ -1,11 +1,11 @@
 #include "HpBar.h"
-#include "Engine/Image.h"
+#include "../../../Engine/Image.h"
 #include "Player.h"
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
-#include "GameSetting.h"
-#include "Engine/Camera.h"
+#include "../../../GameSetting.h"
+#include "../../../Engine/Camera.h"
 
 HpBar::HpBar(GameObject* parent)
 	: GameObject(parent, "HpBar")

@@ -1,31 +1,29 @@
 #include "Player.h"
 #include "SpaceShuttle.h"
 #include "HpBar.h"
-#include "Engine/Model.h"
-#include "Engine/Image.h"
-#include "Engine/Input.h"
-#include "Engine/Camera.h"
-#include "GameSetting.h"
-#include "Engine/Time.h"
-#include "Engine/SceneManager.h"
-#include "Engine/Audio.h"
+#include "../../../Engine/Model.h"
+#include "../../../Engine/Image.h"
+#include "../../../Engine/Input.h"
+#include "../../../Engine/Camera.h"
+#include "../../../GameSetting.h"
+#include "../../../Engine/Time.h"
+#include "../../../Engine/SceneManager.h"
+#include "../../../Engine/Audio.h"
 #include <algorithm>
-
+#include <cmath>
 Player::Player(GameObject* parent):GameObject(parent,"Player"), 
-			hPlayerModel_(INVALID_OBJECT_HANDLE),hPlayerSwimmingModel_(INVALID_OBJECT_HANDLE),hPlayerFloatingModel_(INVALID_OBJECT_HANDLE),playerMoveSpeed_(0.2f),
+			hPlayerModel_(INVALID_OBJECT_HANDLE),
             hp_(5), cameraYaw_(0.0f),cameraPitch_(0.0f),cameraDistance_(10.0f),
-	        initCameraDistance_(10.0f), cameraZoomSpeed_(0.2f),
-            isRotateRight_(), originalRotateRight_(), isRotateLeft_(), originalRotateLeft_(),
-            cameraMinDistance_(5.0f), cameraMaxDistance_(20.0f), cameraRotateSpeed_(0.05f)
+	        initCameraDistance_(10.0f), cameraZoomSpeed_(0.2f)
 {
 }
 
 void Player::Initialize()
 {   
-    Instantiate<SpaceShuttle>(this);
+     Instantiate<SpaceShuttle>(this);
 	
-    hPlayerModel_ = Model::Load("Models\\Player\\PlayerSitting.fbx");
-	assert(hPlayerModel_ >= INVALID_MODEL_HANDLE);
+    // hPlayerModel_ = Model::Load("Models\\Player\\PlayerSitting.fbx");
+	// assert(hPlayerModel_ >= INVALID_MODEL_HANDLE);
 
 	hDamagePict_ = Image::Load("Images\\PlayScene\\Damage.png");
     assert(hDamagePict_ >= INVALID_IMAGE_HANDLE);
@@ -45,8 +43,8 @@ void Player::Update()
         //-------------------------
         // controller input
         //-------------------------
-        // --- プレイヤー移動（左スティック） ---
-        XMFLOAT3 stick = Input::GetPadStickL(); // 左スティック入力（x:左右, y:前後）
+        //--- プレイヤー移動（左スティック） ---
+        XMFLOAT3 stick = Input::GetPadStickL(); // 左のスティック入力（x:左右, y:前後）
 
         // 入力が有効なときだけ処理
         if (fabs(stick.x) > Input::StickDeadZone || fabs(stick.y) > Input::StickDeadZone) {
@@ -204,22 +202,25 @@ void Player::Update()
 }
 
 void Player::Draw()
-{    
-    Model::SetTransform(hPlayerModel_, transform_);
-	Model::Draw(hPlayerModel_);
+{
+    // PlayerModel → Shuttle のみの方がいい
+    // Model::SetTransform(hPlayerModel_, transform_);
+    // Model::Draw(hPlayerModel_);
 
+
+    // ダメージ点滅の描画
     if (isDamageFlashing_) {
-        float alpha = 1 - (damageFlashTimer_ / damageFlashDuration_);
+        float alpha = 1.0f - (damageFlashTimer_ / damageFlashDuration_);
         int alphaValue = static_cast<int>(alpha * 255.0f);
 
-        //Transform fullscreen;
-        //fullscreen.position_ = { ZERO, ZERO, ZERO };
+        Transform fullscreen;
+        fullscreen.position_ = { ZERO, ZERO, ZERO };
+        fullscreen.scale_ = { WINDOW_WIDTH, WINDOW_HEIGHT, 1 }; // 解像度に合わせて調整
 
-        Image::SetTransform(hDamagePict_, transform_);
-        Image::SetAlpha(hDamagePict_, alpha);
+        Image::SetTransform(hDamagePict_, fullscreen);
+        Image::SetAlpha(hDamagePict_, alphaValue);
         Image::Draw(hDamagePict_);
     }
-
 
 }
 
@@ -241,15 +242,15 @@ void Player::OnCollision(GameObject* pTarget)
             hp_ -= PLAYER_HP_DOWN;
              // 赤点滅のダメージフラグを立てる
             isDamageFlashing_ = true;
-            damageFlashTimer_ = 0.0f;
+            damageFlashTimer_ = 0.0f;// フェード開始
             // 無敵タイマーを開始
             invincibleTimer_ = invincibleTime_;
         }
 
-        if (hp_ <= PLAYER_HP_MIN) {// HP が0になったら、Playerを削除してGameOverSceneに移動
+        if (hp_ <= PLAYER_HP_MIN) {// HP=0で、Playerを削除してGameOverSceneに遷移する
             
 
-            KillMe();
+            KillMe();// Playerを削除
             SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
             pSceneManager->ChangeScene(SCENE_ID_GAMEOVER);
         }

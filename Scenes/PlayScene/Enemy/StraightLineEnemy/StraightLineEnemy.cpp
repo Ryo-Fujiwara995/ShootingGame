@@ -1,6 +1,6 @@
 ﻿#include "StraightLineEnemy.h"
-#include "Engine/Model.h"
-#include "Engine/Time.h"
+#include "../../../../Engine/Model.h"
+#include "../../../../Engine/Time.h"
 #include <cmath>
 #include <cstdlib> // rand()
 StraightLineEnemy::StraightLineEnemy(GameObject* parent) :GameObject(parent, "StraightLineEnemy")

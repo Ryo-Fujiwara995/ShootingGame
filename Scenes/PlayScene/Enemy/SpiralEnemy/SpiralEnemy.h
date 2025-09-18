@@ -1,7 +1,7 @@
 #pragma once
-#include "Player.h"
-#include "Engine/GameObject.h"
-#include "GameSetting.h"
+#include "../../Player/Player.h"
+#include "../../../../Engine/GameObject.h"
+#include "../../../../GameSetting.h"
 /// <summary>
 /// —†ùÚ‹ßŒ^‚Ì“GƒNƒ‰ƒX
 /// </summary>

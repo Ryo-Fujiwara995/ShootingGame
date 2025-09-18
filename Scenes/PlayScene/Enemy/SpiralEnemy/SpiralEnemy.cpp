@@ -1,6 +1,6 @@
 #include "SpiralEnemy.h"
-#include "Engine/Model.h"
-#include "Engine/Time.h"
+#include "../../../../Engine/Model.h"
+#include "../../../../Engine/Time.h"
 SpiralEnemy::SpiralEnemy(GameObject* parent) :GameObject(parent, "SpiralEnemy"), hSpiralEnemyDefaultModel_(-1)
 {
 }

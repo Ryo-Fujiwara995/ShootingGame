@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/GameObject.h"
+#include "../../../Engine/GameObject.h"
 #include <string>
 //enum PLAYER_ID {
 //	PLAYER_ID_DEFAULT = 0,	// 初期状態
@@ -14,30 +14,21 @@ class Player :
 private:
 	//画像関係
 	int hDamagePict_; // ダメージ時の赤い画面
-	
+
 	// モデル関係
 	int hPlayerModel_;
-	int hPlayerSwimmingModel_;
-	int hPlayerFloatingModel_;
 	
-	const float playerMoveSpeed_; // Playerの移動速度
 	int hp_;
 
 	float invincibleTimer_ = 0.0f;      // 無敵タイマー
 	const float invincibleTime_ = 2.0f; // 無敵時間（秒）
 	
 	float damageFlashTimer_ = 0.0f;
-	const float damageFlashDuration_ = 0.5f; // 点滅時間（秒）
+	const float damageFlashDuration_ = 0.5f; // フェードの時間（秒）
+	const float damageFlashHold_ = 0.06f; // 先頭の赤色を維持する時間（秒）
 	bool isDamageFlashing_ = false;
 
 	//PLAYER_ID playerState_;
-	
-	// 回転関係
-	bool isRotateRight_;
-	float originalRotateRight_; // 右回転を始めたときの角度や変化量
-	bool isRotateLeft_;
-	float originalRotateLeft_; // 左回転を始めたときの角度や変化量
-
 
 	// カメラ関係
 	float cameraYaw_; // 左右(Y軸周り)
@@ -47,9 +38,6 @@ private:
 	const float initCameraPitch_ = 0.0f;   // 初期Pitch角
 	const float initCameraDistance_; // 初期距離
 	const float cameraZoomSpeed_; // ズームスピード
-	const float cameraMinDistance_; // ズームの最小距離
-	const float cameraMaxDistance_; // ズームの最大距離
-	const float cameraRotateSpeed_; // カメラの回転速度
 
 	float rotationSpeed_ = 5.0f; // ラジアン/秒（例えば5.0fなら1秒で約286度回転）
 public:

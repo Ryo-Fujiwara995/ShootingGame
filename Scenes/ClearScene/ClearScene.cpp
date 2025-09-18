@@ -1,7 +1,7 @@
 #include "ClearScene.h"
-#include "Engine/SceneManager.h"
-#include "Engine/Image.h"
-#include "Engine/Input.h"
+#include "../../Engine/SceneManager.h"
+#include "../../Engine/Image.h"
+#include "../../Engine/Input.h"
 ClearScene::ClearScene(GameObject* parent)
 {
 }

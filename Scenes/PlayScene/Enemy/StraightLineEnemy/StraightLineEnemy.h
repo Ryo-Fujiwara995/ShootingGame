@@ -1,7 +1,7 @@
 #pragma once
-#include "Player.h"
-#include "Engine/GameObject.h"
-#include "GameSetting.h"
+#include "../../Player/Player.h"
+#include "../../../../Engine/GameObject.h"
+#include "../../../../GameSetting.h"
 /// <summary>
 /// Playerを見つけたら、見つけた時点でのPlayerのポジションに向かってまっすぐ進む敵クラス
 /// </summary>
